@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./data/database/data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+
+  directus:
+    image: directus/directus:11.10.0
+    container_name: directus
+    volumes:
+      - ./data/directus/uploads:/directus/uploads
+      - ./data/directus/extensions:/directus/extensions
+    depends_on:
+      - postgres
+    environment:
+      SECRET: ${DIRECTUS_SECET}
+      DB_CLIENT: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+    ports:
+      - "8055:8055"
+
+# sveltekit:
+#   build:
+#     context: ./sveltekit
+#   container_name: sveltekit
+#   ports:
+#     - "3000:3000"
+#   volumes:
+#     - ./sveltekit:/app
+#   command: pnpm run dev
+#   working_dir: /app
+#   depends_on:
+#     - directus
+#   environment:
+#     VITE_DIRECTUS_URL: http://localhost:8055

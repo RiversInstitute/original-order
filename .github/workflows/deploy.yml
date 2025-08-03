@@ -3,7 +3,7 @@ name: Deploy to Digital Ocean Server
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:

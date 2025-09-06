@@ -1,0 +1,24 @@
+---
+import "../styles/reset.scss";
+
+interface Props {
+	pageTitle?: string; // Define the type for the prop
+}
+
+const { pageTitle } = Astro.props; // Destructure the prop
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{pageTitle && `${pageTitle} | `} Bettina</title>
+	</head>
+
+	<body>
+		<slot />
+	</body>
+</html>

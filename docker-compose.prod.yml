@@ -1,7 +1,10 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:17
     container_name: postgres
+    restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -14,6 +17,7 @@ services:
   directus:
     image: directus/directus:11.10.0
     container_name: directus
+    restart: always
     volumes:
       - ./data/directus/uploads:/directus/uploads
       - ./data/directus/extensions:/directus/extensions
@@ -33,18 +37,14 @@ services:
       - "8055:8055"
 
   astro:
+    restart: always
     build:
       context: ./app
       dockerfile: Dockerfile
-      target: base
     container_name: astro
-    volumes:
-      - ./app:/app
-      - /app/node_modules
     ports:
       - "4321:4321"
     environment:
       VITE_DIRECTUS_URL: http://directus:8055
-    command: sh -c "pnpm install && pnpm dev --host"
     depends_on:
       - directus

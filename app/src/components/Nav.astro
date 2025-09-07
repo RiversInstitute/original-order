@@ -1,0 +1,53 @@
+<div>
+  <button data-nav>Nav</button>
+  <navigation>
+    <img src="bettina.png" />
+    <ul>
+      <li><a href="/"><strong>Home</strong></a></li>
+      <li><a href="/order-original"><strong>Order Original</strong></a></li>
+    </ul>
+    <button data-nav>×</button>
+  </navigation>
+</div>
+
+<style>
+  div {
+    position: fixed;
+    bottom: var(--spacing--base);
+    left: var(--spacing--base);
+  }
+
+  navigation {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: var(--color-bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(4 * var(--spacing--base));
+
+    &.show {
+      display: flex;
+    }
+
+    img {
+      max-width: 200px;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: calc(2 * var(--spacing--base));
+      text-align: center;
+      text-transform: uppercase;
+    }
+  }
+</style>
+<script>
+  document.querySelectorAll("button[data-nav]")?.forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelector("navigation")?.classList.toggle("show");
+    });
+  });
+</script>

@@ -11,9 +11,14 @@
   "dependencies": {
     "@astrojs/node": "^9.4.3",
     "@directus/sdk": "^20.0.3",
-    "astro": "^5.13.5"
+    "astro": "^5.13.5",
+    "marked": "^16.2.1",
+    "masonry-layout": "^4.2.2",
+    "packery": "^3.0.0"
   },
   "devDependencies": {
+    "@types/masonry-layout": "^4.2.8",
+    "@types/packery": "^1.4.37",
     "sass-embedded": "^1.92.1"
   }
 }

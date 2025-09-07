@@ -1,87 +1,91 @@
 /* Derived from: https://github.com/elad2412/the-new-css-reset */
 
 /* Remove all the styles of the “User-Agent-Stylesheet” except for the `display` property. */
-*:where(:not(html, svg *, symbol *)) {
-  all: unset;
-  display: revert;
-}
 
-/* Preferred box-sizing value. */
-*,
-*::before,
-*::after {
-  box-sizing: border-box
-}
+@layer reset {
+  *:where(:not(html, svg *, symbol *, img)) {
+    all: unset;
+    display: revert;
+  }
 
-/* Fix mobile Safari increase font-size on landscape mode. */
-html {
-  -moz-text-size-adjust: none;
-  -webkit-text-size-adjust: none;
-  text-size-adjust: none;
-}
+  /* Preferred box-sizing value. */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box
+  }
 
-/* Reapply the pointer cursor for anchor tags. */
-a,
-button {
-  cursor: revert
-}
+  /* Fix mobile Safari increase font-size on landscape mode. */
+  html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
 
-/* Remove list styles (bullets/numbers). */
-ol,
-ul,
-menu,
-summary {
-  list-style: none
-}
+  /* Reapply the pointer cursor for anchor tags. */
+  a,
+  button {
+    cursor: revert
+  }
 
-/* For images to not be able to exceed their container. */
-img {
-  max-block-size: 100%;
-  max-inline-size: 100%;
-}
+  /* Remove list styles (bullets/numbers). */
+  ol,
+  ul,
+  menu,
+  summary {
+    list-style: none
+  }
 
-/* Remove spacing between cells in tables. */
-table {
-  border-collapse: collapse
-}
+  /* For images to not be able to exceed their container. */
+  img {
+    max-block-size: 100%;
+    max-inline-size: 100%;
+    display: block;
+  }
 
-/* Safari issue when using text input. */
-input,
-textarea {
-  -webkit-user-select: auto
-}
+  /* Remove spacing between cells in tables. */
+  table {
+    border-collapse: collapse
+  }
 
-/* Revert for textarea elements on Safari. */
-textarea {
-  white-space: revert
-}
+  /* Safari issue when using text input. */
+  input,
+  textarea {
+    -webkit-user-select: auto
+  }
 
-/* Minimum style to allow to style meter element. */
-meter {
-  appearance: revert
-}
+  /* Revert for textarea elements on Safari. */
+  textarea {
+    white-space: revert
+  }
 
-/* Default text opacity of input placeholder. */
-::placeholder {
-  color: unset
-}
+  /* Minimum style to allow to style meter element. */
+  meter {
+    appearance: revert
+  }
 
-/* Nix user-agent overlay colors. */
-::backdrop {
-  background: unset
-}
+  /* Default text opacity of input placeholder. */
+  ::placeholder {
+    color: unset
+  }
 
-/* Fix the feature of 'hidden' attribute. */
-:where([hidden]) {
-  display: none
-}
+  /* Nix user-agent overlay colors. */
+  ::backdrop {
+    background: unset
+  }
 
-/* Restore draggable feature. */
-:where([draggable='true']) {
-  -webkit-user-drag: element
-}
+  /* Fix the feature of 'hidden' attribute. */
+  :where([hidden]) {
+    display: none
+  }
 
-/* Remove details/summary styles. */
-::-webkit-details-marker {
-  display: none
+  /* Restore draggable feature. */
+  :where([draggable='true']) {
+    -webkit-user-drag: element
+  }
+
+  /* Remove details/summary styles. */
+  ::-webkit-details-marker {
+    display: none
+  }
 }

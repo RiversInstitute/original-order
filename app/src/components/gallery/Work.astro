@@ -1,0 +1,40 @@
+---
+import { marked } from "marked";
+
+import { type Work } from "@/lib/types";
+import DirectusImage from "@/components/ui/DirectusImage.astro";
+
+interface Props {
+  work: Work;
+}
+
+const { work } = Astro.props;
+---
+
+<div>
+  <figure>
+    {
+      work.primary_view ? (
+        <DirectusImage id={work.primary_view} alt={work.title} />
+      ) : (
+        <div data-missing-image>No image available</div>
+      )
+    }
+  </figure>
+</div>
+
+<style>
+  figure {
+    img {
+      max-width: 250px;
+      max-height: 250px;
+    }
+  }
+
+  div[data-missing-image] {
+    width: 300px;
+    aspect-ratio: 4 / 3;
+    background: var(--color-grey);
+    color: var(--color-bg);
+  }
+</style>

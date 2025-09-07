@@ -1,5 +1,6 @@
 ---
 import "../styles/reset.scss";
+import "../styles/base.scss";
 
 interface Props {
 	pageTitle?: string; // Define the type for the prop
@@ -13,7 +14,7 @@ const { pageTitle } = Astro.props; // Destructure the prop
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/x-icon" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{pageTitle && `${pageTitle} | `} Bettina</title>
 	</head>

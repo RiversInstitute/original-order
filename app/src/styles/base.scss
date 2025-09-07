@@ -1,0 +1,58 @@
+@layer reset, base;
+
+@layer base {
+  :root {
+    --color-text: #ffffff;
+    --color-bg: #000000;
+    --color-grey: #e5e5e5;
+
+    --font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+    --font-family--secondary: 'Courier New', Courier, monospace;
+    --font-size--base: 14px;
+    --spacing--base: 1rem;
+
+    --leading: 1;
+    --tracking: -0.02em;
+
+    @media screen and (min-width: 768px) {
+      --font-size--base: 16px;
+    }
+  }
+
+  body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: var(--leading);
+    background-color: var(--color-bg);
+    letter-spacing: var(--tracking);
+
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  h1 {
+    font-size: calc(4 * var(--font-size--base));
+  }
+
+  h2 {
+    font-size: calc(2 * var(--font-size--base));
+  }
+
+  h3 {
+    font-size: calc(1.5 * var(--font-size--base));
+  }
+
+  button,
+  a {
+    cursor: pointer;
+  }
+}

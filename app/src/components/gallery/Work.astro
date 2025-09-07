@@ -12,29 +12,52 @@ const { work } = Astro.props;
 ---
 
 <div>
-  <figure>
+  <button>
+    <figure style=`--width-scale: ${Math.random() * .5 + .75}`>
+      {
+        work.primary_view ? (
+          <DirectusImage id={work.primary_view} alt={work.title} />
+        ) : (
+          <div data-missing-image />
+        )
+      }
+    </figure>
+  </button>
+  <article>
+    <h2 set:html={marked.parseInline(work.title)} />
     {
-      work.primary_view ? (
-        <DirectusImage id={work.primary_view} alt={work.title} />
-      ) : (
-        <div data-missing-image>No image available</div>
-      )
+      work.description ? (
+        <div class="description" set:html={marked.parse(work.description)} />
+      ) : null
     }
-  </figure>
+  </article>
 </div>
 
 <style>
-  figure {
-    img {
-      max-width: 250px;
-      max-height: 250px;
-    }
-  }
+  div {
+    figure {
+      img {
+        max-inline-size: calc(var(--width-scale, 1) * 300px);
+        height: auto;
+      }
 
-  div[data-missing-image] {
-    width: 300px;
-    aspect-ratio: 4 / 3;
-    background: var(--color-grey);
-    color: var(--color-bg);
+      div[data-missing-image] {
+        width: 300px;
+        aspect-ratio: 4 / 3;
+        border: 1px solid var(--color-grey);
+      }
+    }
+
+    &.active {
+      article {
+        display: block;
+      }
+    }
+    article {
+      display: none;
+      position: fixed;
+      inset: 20%;
+      background: black;
+    }
   }
 </style>

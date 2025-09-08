@@ -13,7 +13,10 @@ const { pageTitle } = Astro.props; // Destructure the prop
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta
+			content="initial-scale=1, width=device-width, viewport-fit=cover"
+			name="viewport"
+		/>
 		<link rel="icon" type="image/x-icon" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{pageTitle && `${pageTitle} | `} Bettina</title>

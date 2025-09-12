@@ -40,6 +40,8 @@ services:
       context: ./app
       dockerfile: Dockerfile
     container_name: astro
+    volumes:
+      - ./app/public/assets/leporello_files:/app/public/assets/leporello_files
     ports:
       - "4321:4321"
     environment:

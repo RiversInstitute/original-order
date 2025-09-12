@@ -1,8 +1,4 @@
-export type Schema = {
-  works: Work[]
-}
-
-export type Work = {
+export interface Work {
   id: number;
   status: 'draft' | 'published';
   date_created: string; // ISO date string
@@ -18,7 +14,34 @@ export type Work = {
     type: 'height' | 'width' | 'depth' | string; // allow other dimension types if possible
     value: string; // could be string or number depending on usage
   }[];
-  primary_view: string;
+  taxonomy: number[] | Work_Taxonomy[] | null;
+  primary_view: string | DirectusFileStub;
   presentations: number[];
   views: string[];
 };
+
+interface Work_Taxonomy {
+  id: number;
+  taxonomy_id: number | Taxonomy;
+  work_id: number | Work;
+}
+
+interface Taxonomy {
+  id: number;
+  title: string;
+  description: string | null;
+}
+
+export interface DirectusFileStub {
+  id: string;
+  width: number;
+  height: number;
+}
+
+export interface Schema {
+  works: Work[]
+  taxonomy: Taxonomy[]
+  work_taxonomy: Work_Taxonomy[]
+  work_primary_view: DirectusFileStub
+  // work_files: Work_File[]
+}

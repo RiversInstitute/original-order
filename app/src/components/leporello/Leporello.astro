@@ -1,0 +1,55 @@
+<div class="container">
+  <div id="leporello-viewer">
+    <div id="example-overlay" class="overlay">
+      <a href="/"></a>
+      <div class="detail"><p>Example title</p></div>
+    </div>
+  </div>
+  <div id="leporello-navigator"></div>
+</div>
+<style>
+  #leporello-viewer,
+  .container {
+    width: 100vw;
+    height: 100dvh;
+  }
+
+  #leporello-navigator {
+    position: absolute;
+    width: calc(100% - (2 * var(--spacing--base)));
+    /* height: 150px; */
+    aspect-ratio: 161688 / 3900;
+    border: 2px solid var(--color-black);
+    background: var(--color-white);
+    left: var(--spacing--base);
+    bottom: var(--spacing--base);
+    right: var(--spacing--base);
+  }
+
+  :global(.overlay) {
+    border: 1px solid white;
+    transition: background-color 0.3s ease;
+    position: relative;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.25);
+      .detail {
+        display: block;
+      }
+    }
+
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .detail {
+      position: absolute;
+      display: none;
+      padding-top: calc(0.5 * var(--spacing--base));
+    }
+  }
+</style>
+
+<script src="./leporello.js"></script>

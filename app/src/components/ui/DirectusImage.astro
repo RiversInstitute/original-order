@@ -2,20 +2,28 @@
 import { readFile } from "@directus/sdk";
 
 import { Client } from "@/lib/directus";
+import type { DirectusFileStub } from "@/lib/types";
 
 interface Props {
-  id: string;
+  asset: string | DirectusFileStub;
   alt?: string;
 }
 
-const { id, alt } = Astro.props;
-const asset = await Client.request(readFile(id));
+const { asset, alt } = Astro.props;
+const file =
+  typeof asset === "string"
+    ? await Client.request(
+        readFile(asset, {
+          fields: ["id", "width", "height"],
+        }),
+      )
+    : asset;
 ---
 
 <img
   loading="lazy"
-  src={`/assets/${id}?width=1800&height=1800&fit=inside`}
+  src={`/assets/${file.id}?width=1800&height=1800&fit=inside`}
   alt={alt}
-  width={asset?.width}
-  height={asset?.height}
+  width={file?.width}
+  height={file?.height}
 />

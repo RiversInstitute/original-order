@@ -9,14 +9,26 @@ interface Props {
 }
 
 const { work } = Astro.props;
+
+const taxonomyClasses = work.taxonomy
+  ? work.taxonomy
+      .map((t) => {
+        if (typeof t === "object" && t.taxonomy_id) {
+          if (typeof t.taxonomy_id === "object" && t.taxonomy_id.id) {
+            return `taxonomy-${t.taxonomy_id.id}`;
+          }
+        }
+      })
+      .join(" ")
+  : "";
 ---
 
-<div>
+<div class={`${taxonomyClasses}`}>
   <button>
     <figure style=`--width-scale: ${Math.random() * .5 + .75}`>
       {
         work.primary_view ? (
-          <DirectusImage id={work.primary_view} alt={work.title} />
+          <DirectusImage asset={work.primary_view} alt={work.title} />
         ) : (
           <div data-missing-image />
         )
@@ -36,13 +48,14 @@ const { work } = Astro.props;
 <style>
   div {
     figure {
+      --baseline-width: calc(var(--spacing--base) * 20);
       img {
-        max-inline-size: calc(var(--width-scale, 1) * 300px);
+        max-inline-size: calc(var(--width-scale, 1) * var(--baseline-width));
         height: auto;
       }
 
       div[data-missing-image] {
-        width: 300px;
+        width: var(--baseline-width);
         aspect-ratio: 4 / 3;
         border: 1px solid var(--color-grey);
       }

@@ -9,7 +9,7 @@
     --font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
     --font-family--secondary: 'Courier New', Courier, monospace;
     --font-size--base: 14px;
-    --spacing--base: 1rem;
+    --spacing--base: var(--font-size--base);
 
     --leading: 1;
     --tracking: -0.02em;

@@ -1,12 +1,58 @@
 <div>
-  <button data-nav>Nav</button>
+  <button data-nav
+    ><svg
+      width="51"
+      height="29"
+      viewBox="0 0 51 29"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M24.4695 1H49.1665L36.818 22.3882L26.697 28.1413H2L14.3485 6.75315L24.4695 1Z"
+        fill="black"></path>
+      <path
+        d="M14.3485 6.75315H39.0454M14.3485 6.75315L2 28.1413M14.3485 6.75315L24.4695 1M39.0454 6.75315L26.697 28.1413M39.0454 6.75315L49.1665 1M26.697 28.1413H2M26.697 28.1413L36.818 22.3882M2 28.1413L12.1211 22.3882M24.4695 1H49.1665M24.4695 1L12.1211 22.3882M49.1665 1L36.818 22.3882M36.818 22.3882H12.1211"
+        stroke="white"
+        stroke-width="1.20929"></path>
+    </svg>
+  </button>
   <navigation>
-    <img src="bettina.png" />
+    <a href="/"><img src="bettina.png" /></a>
     <ul>
-      <li><a href="/"><strong>Home</strong></a></li>
-      <li><a href="/order-original"><strong>Order Original</strong></a></li>
+      <li>
+        <a href="/original-order"><h3><strong>Original Order</strong></h3></a>
+      </li>
+      <li>
+        <a href="/order-original"><h3><strong>Order Original</strong></h3></a>
+      </li>
+      <li><h3>&nbsp;</h3></li>
+      <li>
+        <a href="/taxonomy"><h3><strong>Taxonomy</strong></h3></a>
+      </li>
+      <li><h3>&nbsp;</h3></li>
+      <li>
+        <a href="https://riversinstitute.org/exhibitions"
+          ><h3><strong>Exhibition</strong></h3></a
+        >
+      </li>
+      <li><h3>&nbsp;</h3></li>
+      <li>
+        <a href="/information"><h3><strong>Information</strong></h3></a>
+      </li>
     </ul>
-    <button data-nav>×</button>
+    <button data-nav
+      ><svg
+        width="37"
+        height="43"
+        viewBox="0 0 37 43"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M7.6919 11.1388H19.0709M7.6919 11.1388L12.8579 21.2775H24.2369L19.0709 11.1388M7.6919 11.1388L12.8579 1H24.237L19.0709 11.1388M29.397 31.4163L24.231 21.2775H12.852L18.018 31.4163M29.397 31.4163H18.018M29.397 31.4163L24.231 41.5551H12.8519L18.018 31.4163M7.68841 11.1388L1 20.3446L6.16596 30.4833L12.8544 21.2775L7.68841 11.1388ZM19.0805 11.1388H30.4595L35.6255 21.2775H24.2465L19.0805 11.1388Z"
+          stroke="white"></path>
+      </svg>
+    </button>
   </navigation>
 </div>
 
@@ -38,8 +84,8 @@
     ul {
       display: flex;
       flex-direction: column;
-      gap: calc(2 * var(--spacing--base));
       text-align: center;
+      gap: calc(0.1 * var(--spacing--base));
       text-transform: uppercase;
     }
   }

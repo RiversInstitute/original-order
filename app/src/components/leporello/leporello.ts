@@ -14,7 +14,7 @@ let viewer = OpenSeadragon({
     },
   ],
   blendTime: 0.15,
-  immediateRender: false,
+  immediateRender: true,
   defaultZoomLevel: 20,
   // maxZoomLevel: 20,
   minZoomLevel: 20,

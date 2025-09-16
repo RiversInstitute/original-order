@@ -3,27 +3,52 @@ import { marked } from "marked";
 
 import { type Work } from "@/lib/types";
 import DirectusImage from "@/components/ui/DirectusImage.astro";
+import UpperRight from "@/components/ui/icons/UpperRight.astro";
 
 interface Props {
   work: Work;
 }
 
 const { work } = Astro.props;
-
+console.log(work);
 const taxonomyClasses = work.taxonomy
-  ? work.taxonomy
-      .map((t) => {
-        if (typeof t === "object" && t.taxonomy_id) {
-          if (typeof t.taxonomy_id === "object" && t.taxonomy_id.id) {
-            return `taxonomy-${t.taxonomy_id.id}`;
-          }
-        }
-      })
-      .join(" ")
-  : "";
+  ?.map((t) =>
+    typeof t === "number"
+      ? `${t}`
+      : typeof t === "object" && t.taxonomy_id
+        ? `${t.taxonomy_id}`
+        : ``,
+  )
+  .join(",");
+
+const seriesClasses = work.series
+  ?.map((s) =>
+    typeof s === "number"
+      ? `${s}`
+      : typeof s === "object" && s.series_id
+        ? `${s.series_id}`
+        : ``,
+  )
+  .join(",");
+
+const mediumClasses = work.medium_category
+  ?.map((m) =>
+    typeof m === "number"
+      ? `${m}`
+      : typeof m === "object" && m.medium_id
+        ? `${m.medium_id}`
+        : ``,
+  )
+  .join(",");
 ---
 
-<div class={`${taxonomyClasses}`}>
+<div
+  data-work
+  data-id={work.id}
+  data-taxonomies={taxonomyClasses?.length ? taxonomyClasses : undefined}
+  data-series={seriesClasses?.length ? seriesClasses : undefined}
+  data-mediums={mediumClasses?.length ? mediumClasses : undefined}
+>
   <button>
     <figure style=`--width-scale: ${Math.random() * .5 + .75}`>
       {
@@ -36,17 +61,16 @@ const taxonomyClasses = work.taxonomy
     </figure>
   </button>
   <article>
-    <h2 set:html={marked.parseInline(work.title)} />
-    {
-      work.description ? (
-        <div class="description" set:html={marked.parse(work.description)} />
-      ) : null
-    }
+    <p class="mono strong" set:html={marked.parseInline(work.title)} />
+    <div><UpperRight /></div>
   </article>
 </div>
 
 <style>
-  div {
+  div[data-work] {
+    padding: var(--spacing--base);
+    width: min-content;
+
     figure {
       --baseline-width: calc(var(--spacing--base) * 20);
       img {
@@ -57,20 +81,33 @@ const taxonomyClasses = work.taxonomy
       div[data-missing-image] {
         width: var(--baseline-width);
         aspect-ratio: 4 / 3;
-        border: 1px solid var(--color-grey);
+        background-color: var(--color-grey);
+      }
+    }
+    &.filtered {
+      opacity: 0.2;
+    }
+    &.selected {
+      outline: 1px solid var(--color-white);
+
+      article {
+        display: flex;
       }
     }
 
-    &.active {
-      article {
-        display: block;
-      }
-    }
     article {
+      margin-top: calc(0.5 * var(--spacing--base));
       display: none;
-      position: fixed;
-      inset: 20%;
-      background: black;
+      justify-content: space-between;
+      gap: calc(0.5 * var(--spacing--base));
+
+      p {
+        text-transform: uppercase;
+      }
+
+      p + div {
+        fill: var(--color-white);
+      }
     }
   }
 </style>

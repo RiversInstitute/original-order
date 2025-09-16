@@ -1,7 +1,10 @@
 import OpenSeadragon from "openseadragon";
 let viewer = OpenSeadragon({
   id: "leporello-viewer",
-  prefixUrl: "/openseadragon/images/",
+  zoomInButton: "zoom-in",
+  zoomOutButton: "zoom-out",
+  showHomeControl: false,
+  showFullPageControl: false,
   tileSources: "/assets/leporello.dzi",
   overlays: [
     {
@@ -21,9 +24,13 @@ let viewer = OpenSeadragon({
   panVertical: false,
   showNavigator: true,
   navigatorId: "leporello-navigator",
-  showNavigationControl: false,
-  gestureSettingsMouse: { clickToZoom: false },
-  gestureSettingsTouch: { clickToZoom: false },
+  // showNavigationControl: false,
+  constrainDuringPan: true,
+  maxImageCacheCount: 1000,
+  // springStiffness: 200,
+  animationTime: 0,
+  gestureSettingsMouse: { clickToZoom: false, scrollToZoom: false },
+  gestureSettingsTouch: { clickToZoom: false, scrollToZoom: false },
 });
 
 viewer.addHandler("open", function () {
@@ -59,23 +66,26 @@ viewer.addHandler("zoom", function ({ zoom }) {
   }
 });
 
-// viewer.addHandler("canvas-scroll", (e) => {
-//   console.log("scroll");
-//   // Prevent OSD's default wheel handling
-//   e.preventDefaultAction = true;
+viewer.addHandler("canvas-scroll", (e) => {
+  // Prevent OSD's default wheel handling
+  e.preventDefaultAction = true;
 
-//   // Wheel delta (pixels). Works for mouse wheel and most trackpads.
-//   const dx = e.originalEvent.deltaX || 0;
-//   const dy = e.originalEvent.deltaY || 0;
+  // Wheel delta (pixels). Works for mouse wheel and most trackpads.
+  const dx = (e.originalEvent as WheelEvent).deltaX || 0;
+  const dy = (e.originalEvent as WheelEvent).deltaY || 0;
 
-//   // Tune this factor for your device feel
-//   const SPEED = 2;
+  // Tune this factor for your device feel
+  const SPEED = 2;
 
-//   // Convert screen pixels → viewport units and pan
-//   const deltaVp = viewer.viewport.deltaPointsFromPixels(
-//     new OpenSeadragon.Point(dx * SPEED, 0),
-//     true,
-//   );
-//   viewer.viewport.panBy(deltaVp);
-//   viewer.viewport.applyConstraints();
-// });
+  // Convert screen pixels → viewport units and pan
+  const deltaVp = viewer.viewport.deltaPointsFromPixels(
+    new OpenSeadragon.Point(dx * SPEED, dy * SPEED),
+    true,
+  );
+  requestAnimationFrame(() => {
+    viewer.viewport.panBy(deltaVp);
+    viewer.viewport.applyConstraints();
+  });
+});
+
+

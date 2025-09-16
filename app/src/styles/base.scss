@@ -2,9 +2,16 @@
 
 @layer base {
   :root {
-    --color-text: #ffffff;
-    --color-bg: #000000;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-text: var(--color-white);
+    --color-bg: var(--color-black);
     --color-grey: #e5e5e5;
+    --color-filter-series: #12268D;
+    --color-filter-medium: var(--color-black);
+    --color-filter-taxonomy: #53164D;
+
+
 
     --font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
     --font-family--secondary: 'Courier New', Courier, monospace;
@@ -31,7 +38,13 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  strong {
+  .mono {
+    font-family: var(--font-family--secondary);
+    letter-spacing: 0;
+  }
+
+  strong,
+  .strong {
     font-weight: bold;
   }
 
@@ -49,6 +62,11 @@
 
   h3 {
     font-size: calc(1.5 * var(--font-size--base));
+  }
+
+  caption {
+    font-size: calc(0.875 * var(--font-size--base));
+
   }
 
   button,

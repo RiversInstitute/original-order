@@ -9,7 +9,9 @@ const allWorks = await Client.request(
     fields: [
       "*",
       { primary_view: ["id", "width", "height"] },
-      { taxonomy: [{ taxonomy_id: ["*"] }] },
+      { taxonomy: ["taxonomy_id"] },
+      { series: ["series_id"] },
+      { medium_category: ["medium_id"] },
     ],
     limit: -1,
   }),
@@ -38,9 +40,28 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 const shuffled = shuffleArray(allWorks);
+
+const taxonomies = await Client.request(
+  readItems("taxonomy", {
+    fields: ["id", "title"],
+    limit: -1,
+  }),
+);
+const series = await Client.request(
+  readItems("series", {
+    fields: ["id", "title"],
+    limit: -1,
+  }),
+);
+const mediums = await Client.request(
+  readItems("medium", {
+    fields: ["id", "title"],
+    limit: -1,
+  }),
+);
 ---
 
-<main>
+<main data-filters={JSON.stringify({ taxonomies, series, mediums })}>
   <ul id="container">
     {
       shuffled.map((work) => (
@@ -50,6 +71,7 @@ const shuffled = shuffleArray(allWorks);
       ))
     }
   </ul>
+  <div id="activeTags"></div>
 </main>
 
 <style>
@@ -57,6 +79,15 @@ const shuffled = shuffleArray(allWorks);
     width: 100vw;
     height: 100dvh;
     overflow: scroll;
+    cursor: grab;
+
+    &.moving {
+      cursor: grabbing;
+      user-select: none;
+      * {
+        pointer-events: none;
+      }
+    }
   }
   ul {
     width: 200vw;
@@ -64,23 +95,45 @@ const shuffled = shuffleArray(allWorks);
   li {
     margin: calc(0.5 * var(--spacing--base));
   }
+
+  #activeTags {
+    position: fixed;
+    bottom: var(--spacing--base);
+    left: var(--spacing--base);
+    display: flex;
+    gap: var(--spacing--base);
+    max-width: calc(100vw - 2 * var(--spacing--base));
+    flex-wrap: wrap;
+
+    .tag {
+      color: var(--color-white);
+      fill: var(--color-white);
+
+      font-weight: bold;
+      text-transform: uppercase;
+
+      display: flex;
+      align-items: center;
+      gap: calc(0.25 * var(--spacing--base));
+
+      a,
+      button {
+        padding: calc(0.25 * var(--spacing--base));
+        background-color: var(--bg-color);
+      }
+
+      &.taxonomies {
+        --bg-color: var(--color-filter-taxonomy);
+      }
+      &.series {
+        --bg-color: var(--color-filter-series);
+      }
+      &.mediums {
+        --bg-color: var(--color-filter-medium);
+      }
+    }
+  }
 </style>
 
-<script>
-  import pd from "packery";
-  import { type Packery } from "packery";
-
-  const container = document.querySelector("#container");
-  if (container) {
-    const pky = pd as unknown as typeof Packery;
-    const p = new pky(container, {
-      itemSelector: "li",
-      transitionDuration: 0,
-      // gutter: 10,
-    });
-
-    // window.addEventListener("load", () => {
-    //   p.layout();
-    // });
-  }
-</script>
+<script src="./gallery.ts"></script>
+<script src="./tags.ts"></script>

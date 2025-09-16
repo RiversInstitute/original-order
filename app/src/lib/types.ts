@@ -15,6 +15,8 @@ export interface Work {
     value: string; // could be string or number depending on usage
   }[];
   taxonomy: number[] | Work_Taxonomy[] | null;
+  series: number[] | Work_Series[] | null;
+  medium_category: number[] | Work_Medium[] | null;
   primary_view: string | DirectusFileStub;
   presentations: number[];
   views: string[];
@@ -26,7 +28,31 @@ interface Work_Taxonomy {
   work_id: number | Work;
 }
 
-interface Taxonomy {
+interface Work_Series {
+  id: number;
+  work_id: number | Work;
+  series_id: number | Series;
+}
+
+interface Work_Medium {
+  id: number;
+  work_id: number | Work;
+  medium_id: number | Medium;
+}
+
+export interface Taxonomy {
+  id: number;
+  title: string;
+  description: string | null;
+}
+
+export interface Series {
+  id: number;
+  title: string;
+  description: string | null;
+}
+
+export interface Medium {
   id: number;
   title: string;
   description: string | null;
@@ -42,6 +68,10 @@ export interface Schema {
   works: Work[]
   taxonomy: Taxonomy[]
   work_taxonomy: Work_Taxonomy[]
+  series: Series[]
+  work_series: Work_Series[]
+  medium: Medium[]
+  work_medium: Work_Medium[]
   work_primary_view: DirectusFileStub
   // work_files: Work_File[]
 }

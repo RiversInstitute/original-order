@@ -75,7 +75,7 @@ viewer.addHandler("canvas-scroll", (e) => {
   const dy = (e.originalEvent as WheelEvent).deltaY || 0;
 
   // Tune this factor for your device feel
-  const SPEED = 2;
+  const SPEED = 4;
 
   // Convert screen pixels → viewport units and pan
   const deltaVp = viewer.viewport.deltaPointsFromPixels(

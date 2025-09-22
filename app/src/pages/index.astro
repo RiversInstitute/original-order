@@ -5,10 +5,30 @@ import Nav from "../components/Nav.astro";
 
 <Layout pageTitle="Original Order">
 	<div>
-		<h1><a href="/original-order">Original Order</a></h1>
-		<h1><a href="/order-original">Order Original</a></h1>
+		<h1>
+			<a href="/original-order">
+				<img src="eye.png" alt="Photograph of Bettina’s eye" />
+				<p>Original Order</p>
+			</a>
+		</h1>
+		<h1>
+			<a href="/order-original">
+				<p>Order Original</p>
+				<img src="egg.png" alt="A marble egg sculpture by Bettina" />
+			</a>
+		</h1>
 	</div>
 	<Nav />
+	<img
+		src="bettina.png"
+		id="bettina-top"
+		alt="Bettina handwritten by the artist"
+	/>
+	<img
+		src="bettina.png"
+		id="bettina-bottom"
+		alt="Bettina handwritten by the artist, flipped horizontally"
+	/>
 </Layout>
 
 <style>
@@ -22,6 +42,35 @@ import Nav from "../components/Nav.astro";
 		h1 {
 			font-weight: bold;
 			text-transform: uppercase;
+			text-align: center;
+
+			a {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: calc(5 * var(--spacing--base));
+
+				img {
+					height: calc(8 * var(--spacing--base));
+					width: min-content;
+				}
+			}
 		}
+	}
+
+	#bettina-top,
+	#bettina-bottom {
+		height: calc(2 * var(--spacing--base));
+		position: fixed;
+		right: var(--spacing--base);
+	}
+
+	#bettina-top {
+		top: var(--spacing--base);
+	}
+
+	#bettina-bottom {
+		bottom: var(--spacing--base);
+		transform: scaleY(-1);
 	}
 </style>

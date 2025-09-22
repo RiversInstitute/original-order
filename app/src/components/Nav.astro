@@ -3,8 +3,9 @@ const exhLink = `https://riversinstitute.org/exhibitions/original-order-order-or
 ---
 
 <div>
-  <button data-nav
+  <button data-nav aria-label="Open navigation"
     ><svg
+      aria-hidden="true"
       width="51"
       height="29"
       viewBox="0 0 51 29"
@@ -21,7 +22,9 @@ const exhLink = `https://riversinstitute.org/exhibitions/original-order-order-or
     </svg>
   </button>
   <navigation>
-    <a href="/"><img src="bettina.png" /></a>
+    <a href="/"
+      ><img src="bettina.png" alt="Bettina handwritten by the artist" /></a
+    >
     <ul>
       <li>
         <a href="/original-order"><h3><strong>Original Order</strong></h3></a>
@@ -42,8 +45,9 @@ const exhLink = `https://riversinstitute.org/exhibitions/original-order-order-or
         <a href="/information"><h3><strong>Information</strong></h3></a>
       </li>
     </ul>
-    <button data-nav
+    <button data-nav aria-label="Close navigation"
       ><svg
+        aria-hidden="true"
         width="37"
         height="43"
         viewBox="0 0 37 43"
@@ -64,6 +68,10 @@ const exhLink = `https://riversinstitute.org/exhibitions/original-order-order-or
     position: fixed;
     bottom: var(--spacing--base);
     left: var(--spacing--base);
+
+    svg {
+      height: calc(2 * var(--spacing--base));
+    }
   }
 
   navigation {
@@ -98,5 +106,10 @@ const exhLink = `https://riversinstitute.org/exhibitions/original-order-order-or
     button.addEventListener("click", () => {
       document.querySelector("navigation")?.classList.toggle("show");
     });
+  });
+
+  document.querySelector("navigation")?.addEventListener("click", (e) => {
+    if (e.target === document.querySelector("navigation"))
+      document.querySelector("navigation")?.classList.remove("show");
   });
 </script>

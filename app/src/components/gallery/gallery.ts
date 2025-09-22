@@ -11,6 +11,12 @@ if (container) {
     transitionDuration: 0,
   });
   (window as CustomWindow).pky = p;
+
+
+  parentContainer?.scrollTo(container.clientWidth / 2 - window.innerWidth / 2, container.clientHeight / 2 - window.innerHeight / 2);
+  if (document.querySelector('[data-work].selected')) {
+    document.querySelector('[data-work].selected')?.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+  }
 }
 
 if (parentContainer) {
@@ -21,6 +27,7 @@ if (parentContainer) {
     scrollTop = 0;
 
   const mouseDownHandler = (e: MouseEvent) => {
+    if (document.querySelector('[data-work].expanded')) return;
     startX = e.clientX;
     startY = e.clientY;
     scrollLeft = parentContainer.scrollLeft;

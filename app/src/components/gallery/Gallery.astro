@@ -81,6 +81,10 @@ const mediums = await Client.request(
     overflow: scroll;
     cursor: grab;
 
+    &:has([data-work].expanded) {
+      cursor: default;
+    }
+
     &.moving {
       cursor: grabbing;
       user-select: none;
@@ -90,7 +94,7 @@ const mediums = await Client.request(
     }
   }
   ul {
-    width: 200vw;
+    width: max(200vw, 200vh);
   }
   li {
     margin: calc(0.5 * var(--spacing--base));
@@ -99,10 +103,11 @@ const mediums = await Client.request(
   #activeTags {
     position: fixed;
     bottom: var(--spacing--base);
-    left: var(--spacing--base);
+    right: var(--spacing--base);
     display: flex;
     gap: var(--spacing--base);
     max-width: calc(100vw - 2 * var(--spacing--base));
+    margin-left: calc(6 * var(--spacing--base));
     flex-wrap: wrap;
 
     .tag {
@@ -136,4 +141,4 @@ const mediums = await Client.request(
 </style>
 
 <script src="./gallery.ts"></script>
-<script src="./tags.ts"></script>
+<script src="./controller.ts"></script>

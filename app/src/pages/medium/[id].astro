@@ -1,0 +1,31 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+import TagNav from "@/components/TagNav.astro";
+
+import { readItem } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+
+const { id } = Astro.params;
+
+if (id === undefined) {
+  return new Response(null, { status: 404 });
+}
+
+let medium;
+
+try {
+  medium = await Client.request(readItem("medium", parseInt(id), {}));
+} catch (e) {
+  return new Response(null, { status: 404 });
+}
+---
+
+<Layout pageTitle={medium.title}>
+  <Nav />
+  <ContentWrapper>
+    <TagNav activeTag="medium" />
+    <h1><strong>{medium.title}</strong></h1>
+  </ContentWrapper>
+</Layout>

@@ -1,3 +1,5 @@
+@import './mixins.scss';
+
 @layer reset, base;
 
 @layer base {
@@ -21,7 +23,7 @@
     --leading: 1;
     --tracking: -0.02em;
 
-    @media screen and (min-width: 768px) {
+    @include desktop {
       --font-size--base: 16px;
     }
   }
@@ -55,7 +57,7 @@
   h1 {
     font-size: calc(2.5 * var(--font-size--base));
 
-    @media screen and (min-width: 768px) {
+    @include desktop {
       font-size: calc(4 * var(--font-size--base));
     }
   }
@@ -76,5 +78,15 @@
   button,
   a {
     cursor: pointer;
+  }
+
+  p a {
+    text-decoration: underline;
+  }
+
+  .wrapper {
+    max-width: 60rem;
+    padding-inline: calc(2 * var(--spacing--base));
+    margin-inline: auto;
   }
 }

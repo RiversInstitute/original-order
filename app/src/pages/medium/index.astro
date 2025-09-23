@@ -1,0 +1,26 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+import TagNav from "@/components/TagNav.astro";
+
+import { readItems } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+import TagList from "@/components/TagList.astro";
+
+const mediums = await Client.request(
+  readItems("medium", {
+    fields: ["id", "title"],
+    limit: -1,
+    sort: ["title"],
+  }),
+);
+---
+
+<Layout pageTitle="Mediums">
+  <Nav />
+  <ContentWrapper>
+    <TagNav activeTag="medium" />
+    <TagList tags={mediums} urlBase="medium" />
+  </ContentWrapper>
+</Layout>

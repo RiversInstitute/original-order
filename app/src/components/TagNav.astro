@@ -1,0 +1,36 @@
+---
+interface Props {
+  activeTag: "taxonomy" | "series" | "medium" | null;
+}
+const { activeTag } = Astro.props;
+---
+
+<ul>
+  <li class={activeTag === "taxonomy" ? "active" : ""}>
+    <a href="/taxonomy/"> <h3 class="strong">Taxonomy</h3></a>
+  </li>
+  <li class={activeTag === "series" ? "active" : ""}>
+    <a href="/series/"> <h3 class="strong">Series</h3></a>
+  </li>
+  <li class={activeTag === "medium" ? "active" : ""}>
+    <a href="/medium/"> <h3 class="strong">Medium</h3></a>
+  </li>
+</ul>
+
+<style>
+  ul {
+    display: flex;
+    gap: calc(1 * var(--spacing--base));
+    text-transform: uppercase;
+    margin-block-end: calc(2 * var(--spacing--base));
+
+    li {
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+      &.active,
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+</style>

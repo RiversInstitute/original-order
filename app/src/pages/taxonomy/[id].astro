@@ -1,0 +1,31 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+import TagNav from "@/components/TagNav.astro";
+
+import { readItem } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+
+const { id } = Astro.params;
+
+if (id === undefined) {
+  return new Response(null, { status: 404 });
+}
+
+let taxonomy;
+
+try {
+  taxonomy = await Client.request(readItem("taxonomy", parseInt(id), {}));
+} catch (e) {
+  return new Response(null, { status: 404 });
+}
+---
+
+<Layout pageTitle={taxonomy.title}>
+  <Nav />
+  <ContentWrapper>
+    <TagNav activeTag="taxonomy" />
+    <h1><strong>{taxonomy.title}</strong></h1>
+  </ContentWrapper>
+</Layout>

@@ -1,0 +1,21 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+---
+
+<Layout pageTitle="Series">
+  <Nav />
+  <ContentWrapper>
+    <img src="/eye.png" alt="Eye of the artist Bettina" />
+    <p><strong>Nothing exists here. Go <a href="/">home</a>.</strong></p>
+  </ContentWrapper>
+</Layout>
+
+<style>
+  img {
+    display: block;
+    max-width: 150px;
+    margin-bottom: var(--spacing--base);
+  }
+</style>

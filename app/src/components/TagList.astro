@@ -1,0 +1,38 @@
+---
+interface Props {
+  tags: {
+    title: string;
+    id: number;
+  }[];
+  urlBase: "taxonomy" | "series" | "medium";
+}
+
+const { tags, urlBase } = Astro.props;
+---
+
+<ul data-list>
+  {
+    tags.map((tag) => (
+      <li>
+        <a href={`/${urlBase}/${tag.id}`}>
+          <strong class="mono">{tag.title}</strong>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  @use "@/styles/mixins.scss";
+
+  ul[data-list] {
+    display: grid;
+    gap: calc(1 * var(--spacing--base));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include mixins.desktop {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-auto-rows: 1fr;
+    }
+  }
+</style>

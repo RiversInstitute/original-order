@@ -1,0 +1,31 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+import TagNav from "@/components/TagNav.astro";
+
+import { readItem } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+
+const { id } = Astro.params;
+
+if (id === undefined) {
+  return new Response(null, { status: 404 });
+}
+
+let series;
+
+try {
+  series = await Client.request(readItem("series", parseInt(id), {}));
+} catch (e) {
+  return new Response(null, { status: 404 });
+}
+---
+
+<Layout pageTitle={series.title}>
+  <Nav />
+  <ContentWrapper>
+    <TagNav activeTag="series" />
+    <h1><strong>{series.title}</strong></h1>
+  </ContentWrapper>
+</Layout>

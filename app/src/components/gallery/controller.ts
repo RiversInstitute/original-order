@@ -29,6 +29,19 @@ window.history.pushState = new Proxy(window.history.pushState, {
   },
 });
 
+const updateParamsFromWork = (work: Element) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const taxonomies = work.getAttribute('data-taxonomies');
+  const series = work.getAttribute('data-series');
+  const mediums = work.getAttribute('data-mediums');
+
+  searchParams.set('id', work.getAttribute('data-id') || '');
+  if (taxonomies) searchParams.set('taxonomies', taxonomies);
+  if (series) searchParams.set('series', series);
+  if (mediums) searchParams.set('mediums', mediums);
+
+  window.history.pushState(null, '', `?${searchParams.toString()}`);
+}
 
 works?.forEach(work => {
   work.querySelector('button[data-close]')?.addEventListener('click', () => {
@@ -47,18 +60,7 @@ works?.forEach(work => {
     } else {
       work.classList.add('selected');
       (window as CustomWindow).pky?.layout();
-
-      const searchParams = new URLSearchParams();
-      const taxonomies = work.getAttribute('data-taxonomies');
-      const series = work.getAttribute('data-series');
-      const mediums = work.getAttribute('data-mediums');
-
-      searchParams.set('id', work.getAttribute('data-id') || '');
-      if (taxonomies) searchParams.set('taxonomies', taxonomies);
-      if (series) searchParams.set('series', series);
-      if (mediums) searchParams.set('mediums', mediums);
-
-      window.history.pushState(null, '', `?${searchParams.toString()}`);
+      updateParamsFromWork(work);
     }
   });
 });
@@ -142,7 +144,17 @@ const renderTags = (q: QueryParams) => {
 
 
 const renderQueryParams = (q: QueryParams) => {
-  const clearAll = (q.mediums?.length ?? 0) === 0 && (q.series?.length ?? 0) === 0 && (q.taxonomies?.length ?? 0) === 0 && !q.selectedId;
+  const emptyTags = (q.mediums?.length ?? 0) === 0 && (q.series?.length ?? 0) === 0 && (q.taxonomies?.length ?? 0) === 0
+  const clearAll = emptyTags && !q.selectedId;
+
+  if (q.selectedId && emptyTags) {
+    const work = container?.querySelector(`[data-work][data-id="${q.selectedId}"]`)
+    if (work) {
+      updateParamsFromWork(work);
+      return;
+    }
+  }
+
   works?.forEach(el => {
     const workTaxonomies = el.getAttribute('data-taxonomies')?.split(',') || [];
     const workSeries = el.getAttribute('data-series')?.split(',') || [];
@@ -151,6 +163,7 @@ const renderQueryParams = (q: QueryParams) => {
 
     if (
       clearAll ||
+      q.selectedId === workId ||
       q.taxonomies?.some(t => workTaxonomies.includes(t)) ||
       q.series?.some(s => workSeries.includes(s)) ||
       q.mediums?.some(m => workMediums.includes(m))
@@ -159,6 +172,7 @@ const renderQueryParams = (q: QueryParams) => {
     } else {
       el.classList.add('filtered');
     }
+
     if (q.selectedId && workId === q.selectedId) {
       el.classList.add('selected');
       if (q.expanded) {

@@ -1,0 +1,61 @@
+---
+import type { Work } from "@/lib/types";
+import DirectusImage from "./DirectusImage.astro";
+import { marked } from "marked";
+import MissingAsset from "./MissingAsset.astro";
+
+interface Props {
+  works: Work[];
+}
+
+const { works } = Astro.props;
+---
+
+<ul>
+  {
+    works.map((work) => (
+      <li>
+        <a href={`/order-original?id=${work.id}&expanded=true`}>
+          <figure>
+            {work.primary_view ? (
+              <DirectusImage asset={work.primary_view} alt={work.title} />
+            ) : (
+              <MissingAsset />
+            )}
+          </figure>
+          <p class="mono strong" set:html={marked.parseInline(work.title)} />
+          <p class="mono">{work.inventory_id}</p>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  @use "@/styles/mixins.scss";
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: calc(2 * var(--spacing--base));
+
+    @include mixins.desktop {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    a {
+      display: flex;
+      flex-direction: column;
+
+      figure {
+        margin: 0;
+        margin-bottom: calc(0.5 * var(--spacing--base));
+
+        :global(img) {
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
+</style>

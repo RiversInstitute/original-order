@@ -15,12 +15,27 @@ const taxonomies = await Client.request(
     sort: ["title"],
   }),
 );
+
+const works = await Client.request(
+  readItems("works_taxonomy", {
+    fields: ["id", "taxonomy_id"],
+    limit: -1,
+  }),
+);
+
+const count: Record<string, number> = {};
+taxonomies.forEach(
+  (tag) =>
+    (count[tag.id] = works.filter(
+      (work) => work.taxonomy_id === tag.id,
+    ).length),
+);
 ---
 
 <Layout pageTitle="Taxonomy">
   <Nav />
   <ContentWrapper>
     <TagNav activeTag="taxonomy" />
-    <TagList tags={taxonomies} urlBase="taxonomy" />
+    <TagList tags={taxonomies} tagCount={count} urlBase="taxonomy" />
   </ContentWrapper>
 </Layout>

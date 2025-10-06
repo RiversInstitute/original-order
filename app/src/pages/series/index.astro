@@ -15,12 +15,25 @@ const series = await Client.request(
     sort: ["title"],
   }),
 );
+
+const works = await Client.request(
+  readItems("works_series", {
+    fields: ["id", "series_id"],
+    limit: -1,
+  }),
+);
+
+const count: Record<string, number> = {};
+series.forEach(
+  (tag) =>
+    (count[tag.id] = works.filter((work) => work.series_id === tag.id).length),
+);
 ---
 
 <Layout pageTitle="Series">
   <Nav />
   <ContentWrapper>
     <TagNav activeTag="series" />
-    <TagList tags={series} urlBase="series" />
+    <TagList tags={series} tagCount={count} urlBase="series" />
   </ContentWrapper>
 </Layout>

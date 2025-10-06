@@ -67,11 +67,11 @@ export interface DirectusFileStub {
 export interface Schema {
   works: Work[]
   taxonomy: Taxonomy[]
-  work_taxonomy: Work_Taxonomy[]
+  works_taxonomy: Work_Taxonomy[]
   series: Series[]
-  work_series: Work_Series[]
+  works_series: Work_Series[]
   medium: Medium[]
-  work_medium: Work_Medium[]
-  work_primary_view: DirectusFileStub
-  // work_files: Work_File[]
+  works_medium: Work_Medium[]
+  works_primary_view: DirectusFileStub
+  // works_files: Work_File[]
 }

@@ -1,0 +1,25 @@
+---
+import { marked } from "marked";
+
+interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+---
+
+<div data-markdown set:html={marked.parse(content)} />
+
+<style>
+  div[data-markdown] {
+    max-width: 800px;
+    font-size: calc(1.25 * var(--font-size--base));
+    line-height: 1.4lh;
+    p {
+      font-weight: bold;
+    }
+    p + p {
+      margin-top: 1lh;
+    }
+  }
+</style>

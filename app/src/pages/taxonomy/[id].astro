@@ -4,8 +4,10 @@ import Nav from "@/components/Nav.astro";
 import ContentWrapper from "@/components/ContentWrapper.astro";
 import TagNav from "@/components/TagNav.astro";
 
-import { readItem } from "@directus/sdk";
+import { readItem, readItems } from "@directus/sdk";
 import { Client } from "@/lib/directus";
+import Markdown from "@/components/ui/Markdown.astro";
+import WorkGrid from "@/components/ui/WorkGrid.astro";
 
 const { id } = Astro.params;
 
@@ -14,9 +16,26 @@ if (id === undefined) {
 }
 
 let taxonomy;
+let works;
 
 try {
   taxonomy = await Client.request(readItem("taxonomy", parseInt(id), {}));
+  works = await Client.request(
+    readItems("works", {
+      filter: {
+        status: { _eq: "published" },
+        taxonomy: { taxonomy_id: { _eq: parseInt(id) } },
+      },
+      fields: [
+        "*",
+        { primary_view: ["id", "width", "height"] },
+        { taxonomy: ["taxonomy_id"] },
+        { series: ["series_id"] },
+        { medium_category: ["medium_id"] },
+      ],
+      limit: -1,
+    }),
+  );
 } catch (e) {
   return new Response(null, { status: 404 });
 }
@@ -26,6 +45,28 @@ try {
   <Nav />
   <ContentWrapper>
     <TagNav activeTag="taxonomy" />
-    <h1><strong>{taxonomy.title}</strong></h1>
+    <h2 class="mono"><strong>{taxonomy.title}</strong></h2>
+    {
+      taxonomy.description ? (
+        <div>
+          <Markdown content={taxonomy.description} />
+        </div>
+      ) : null
+    }
+    <div>
+      {works && <WorkGrid works={works} />}
+    </div>
   </ContentWrapper>
 </Layout>
+
+<style>
+  h2 {
+    padding: calc(0.5 * var(--spacing--base));
+    align-self: start;
+    background-color: var(--color-filter-taxonomy);
+    text-wrap: pretty;
+  }
+  div {
+    margin-top: calc(2 * var(--spacing--base));
+  }
+</style>

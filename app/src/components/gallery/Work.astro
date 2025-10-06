@@ -4,6 +4,7 @@ import { marked } from "marked";
 import { type Work } from "@/lib/types";
 import DirectusImage from "@/components/ui/DirectusImage.astro";
 import UpperRight from "@/components/ui/icons/UpperRight.astro";
+import MissingAsset from "../ui/MissingAsset.astro";
 
 interface Props {
   work: Work;
@@ -55,7 +56,7 @@ const mediumClasses = work.medium_category
         work.primary_view ? (
           <DirectusImage asset={work.primary_view} alt={work.title} />
         ) : (
-          <div data-missing-image />
+          <MissingAsset />
         )
       }
     </figure>
@@ -110,12 +111,6 @@ const mediumClasses = work.medium_category
       img {
         max-inline-size: calc(var(--width-scale, 1) * var(--baseline-width));
         height: auto;
-      }
-
-      div[data-missing-image] {
-        width: var(--baseline-width);
-        aspect-ratio: 4 / 3;
-        background-color: var(--color-grey);
       }
     }
     &.filtered {

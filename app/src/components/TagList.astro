@@ -4,10 +4,11 @@ interface Props {
     title: string;
     id: number;
   }[];
+  tagCount?: Record<string, number>;
   urlBase: "taxonomy" | "series" | "medium";
 }
 
-const { tags, urlBase } = Astro.props;
+const { tags, urlBase, tagCount } = Astro.props;
 ---
 
 <ul data-list>
@@ -15,7 +16,15 @@ const { tags, urlBase } = Astro.props;
     tags.map((tag) => (
       <li>
         <a href={`/${urlBase}/${tag.id}`}>
-          <strong class="mono">{tag.title}</strong>
+          <p>
+            <strong class="mono">{tag.title}</strong>
+          </p>
+          {tagCount && tagCount[tag.id] > 0 && (
+            <p class="mono">
+              <span>{tagCount[tag.id]}</span>
+              {tagCount[tag.id] === 1 ? "work" : "works"}
+            </p>
+          )}
         </a>
       </li>
     ))

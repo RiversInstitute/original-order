@@ -15,12 +15,25 @@ const mediums = await Client.request(
     sort: ["title"],
   }),
 );
+
+const works = await Client.request(
+  readItems("works_medium", {
+    fields: ["id", "medium_id"],
+    limit: -1,
+  }),
+);
+
+const count: Record<string, number> = {};
+mediums.forEach(
+  (tag) =>
+    (count[tag.id] = works.filter((work) => work.medium_id === tag.id).length),
+);
 ---
 
 <Layout pageTitle="Mediums">
   <Nav />
   <ContentWrapper>
     <TagNav activeTag="medium" />
-    <TagList tags={mediums} urlBase="medium" />
+    <TagList tags={mediums} tagCount={count} urlBase="medium" />
   </ContentWrapper>
 </Layout>

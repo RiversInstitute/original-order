@@ -45,6 +45,8 @@ services:
       - "4321:4321"
     environment:
       VITE_DIRECTUS_URL: http://directus:8055
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
     command: sh -c "pnpm install && pnpm dev --host"
     depends_on:
       - directus

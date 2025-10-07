@@ -1,0 +1,39 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+
+import { marked } from "marked";
+import { readSingleton } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+import Markdown from "@/components/ui/Markdown.astro";
+
+let information;
+try {
+  information = await Client.request(readSingleton("information", {}));
+} catch (e) {
+  return new Response(null, { status: 404 });
+}
+---
+
+<Layout pageTitle={information.title.replaceAll("*", "")}>
+  <Nav />
+  <ContentWrapper>
+    <h2 class="strong" set:html={marked.parseInline(information.title)} />
+    <div>
+      <Markdown content={information.content} />
+    </div>
+  </ContentWrapper>
+</Layout>
+
+<style>
+  h2 {
+    align-self: start;
+    text-wrap: pretty;
+    text-transform: uppercase;
+  }
+
+  div {
+    margin-top: calc(2 * var(--spacing--base));
+  }
+</style>

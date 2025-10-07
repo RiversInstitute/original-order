@@ -58,6 +58,11 @@ export interface Medium {
   description: string | null;
 }
 
+export interface Information {
+  title: string;
+  content: string;
+}
+
 export interface DirectusFileStub {
   id: string;
   width: number;
@@ -65,6 +70,7 @@ export interface DirectusFileStub {
 }
 
 export interface Schema {
+  information: Information
   works: Work[]
   taxonomy: Taxonomy[]
   works_taxonomy: Work_Taxonomy[]

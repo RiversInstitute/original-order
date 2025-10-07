@@ -19,16 +19,15 @@ import Nav from "../components/Nav.astro";
 		</h1>
 	</div>
 	<Nav />
-	<img
-		src="/bettina.png"
-		id="bettina-top"
-		alt="Bettina handwritten by the artist"
-	/>
-	<img
-		src="/bettina.png"
-		id="bettina-bottom"
-		alt="Bettina handwritten by the artist, flipped horizontally"
-	/>
+	<a id="bettina-top" href="/information">
+		<img src="/bettina.png" alt="Bettina handwritten by the artist" />
+	</a>
+	<a id="bettina-bottom" href="/information">
+		<img
+			src="/bettina.png"
+			alt="Bettina handwritten by the artist, flipped horizontally"
+		/>
+	</a>
 </Layout>
 
 <style>

@@ -1,4 +1,4 @@
-@import './mixins.scss';
+@use './mixins.scss';
 
 @layer reset, base;
 
@@ -23,7 +23,7 @@
     --leading: 1;
     --tracking: -0.02em;
 
-    @include desktop {
+    @include mixins.desktop {
       --font-size--base: 16px;
     }
   }
@@ -57,7 +57,7 @@
   h1 {
     font-size: calc(2.5 * var(--font-size--base));
 
-    @include desktop {
+    @include mixins.desktop {
       font-size: calc(4 * var(--font-size--base));
     }
   }

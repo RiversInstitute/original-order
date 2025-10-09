@@ -5,7 +5,7 @@ import Work from "@/components/gallery/Work.astro";
 
 const allWorks = await Client.request(
   readItems("works", {
-    filter: { status: { _eq: "published" } },
+    filter: { status: { _eq: "published" }, primary_view: { _nnull: true } },
     fields: [
       "*",
       { primary_view: ["id", "width", "height"] },

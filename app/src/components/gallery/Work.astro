@@ -5,6 +5,7 @@ import { type Work } from "@/lib/types";
 import DirectusImage from "@/components/ui/DirectusImage.astro";
 import UpperRight from "@/components/ui/icons/UpperRight.astro";
 import MissingAsset from "../ui/MissingAsset.astro";
+import Markdown from "../ui/Markdown.astro";
 
 interface Props {
   work: Work;
@@ -41,6 +42,22 @@ const mediumClasses = work.medium_category
         : ``,
   )
   .join(",");
+
+let coreDims = [];
+coreDims.push(work.dimensions?.find((dim) => dim.type === "width")?.value);
+coreDims.push(work.dimensions?.find((dim) => dim.type === "height")?.value);
+coreDims.push(work.dimensions?.find((dim) => dim.type === "depth")?.value);
+coreDims = coreDims.filter((dim) => dim && dim.length > 0);
+
+const rest = work.dimensions
+  ?.filter((dim) => !["width", "height", "depth"].includes(dim.type ?? ""))
+  .map((dim) => dim.value?.trim())
+  .filter((dim) => dim && dim.length > 0);
+
+const dimString =
+  coreDims.join(" × ") +
+  (coreDims.length > 0 ? '"' : "") +
+  (rest && rest.length ? ` ${rest.join(" ")}` : "");
 ---
 
 <div
@@ -51,7 +68,10 @@ const mediumClasses = work.medium_category
   data-mediums={mediumClasses?.length ? mediumClasses : undefined}
 >
   <button data-open aria-label={`View details for ${work.title}`} type="button">
-    <figure style=`--width-scale: ${Math.random() * .5 + .75}`>
+    <figure
+      data-preview-figure
+      style=`--width-scale: ${Math.random() * .5 + .75}`
+    >
       {
         work.primary_view ? (
           <DirectusImage asset={work.primary_view} alt={work.title} />
@@ -88,15 +108,41 @@ const mediumClasses = work.medium_category
         </svg>
       </svg></button
     >
-    <div class="details">
-      <h2 class="strong" set:html={marked.parseInline(work.title)} />
-      <p>{work.year}</p>
-      {
-        work.description ? (
-          <div set:html={marked.parse(work.description)} />
-        ) : null
-      }
-      <p class="mono">{work.inventory_id}</p>
+    <div>
+      <figure>
+        {
+          work.primary_view ? (
+            <DirectusImage asset={work.primary_view} alt={work.title} />
+          ) : (
+            <MissingAsset />
+          )
+        }
+      </figure>
+      <div class="details">
+        <div>
+          <h2 class="strong" set:html={marked.parseInline(work.title)} />
+          <h3 class="strong">{work.year}</h3>
+          {work.description ? <Markdown content={work.description} /> : null}
+        </div>
+        <div>
+          <dl>
+            <div>
+              <dt>Dimensions</dt>
+              <dd class="mono">
+                {dimString.length ? dimString : "N/A"}
+              </dd>
+            </div>
+            <div>
+              <dt>Inventory Number</dt>
+              <dd class="mono">{work.inventory_id}</dd>
+            </div>
+            <div>
+              <dt>Medium</dt>
+              <dd class="mono">{work.medium_description}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
     </div>
   </article>
 </div>
@@ -106,7 +152,7 @@ const mediumClasses = work.medium_category
     padding: var(--spacing--base);
     width: min-content;
 
-    figure {
+    figure[data-preview-figure] {
       --baseline-width: calc(var(--spacing--base) * 20);
       img {
         max-inline-size: calc(var(--width-scale, 1) * var(--baseline-width));
@@ -164,13 +210,54 @@ const mediumClasses = work.medium_category
           stroke: var(--color-white);
         }
       }
+      > div {
+        max-width: 60rem;
 
-      .details {
-        outline: 1px solid var(--color-white);
-        padding: calc(1 * var(--spacing--base));
-        display: flex;
-        flex-direction: column;
-        gap: calc(0.5 * var(--spacing--base));
+        display: grid;
+        gap: var(--spacing--base);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+
+        figure {
+          img {
+            width: 100%;
+            height: auto;
+          }
+        }
+
+        .details {
+          display: flex;
+          flex-direction: column;
+
+          > div {
+            width: 100%;
+            border: 1px solid var(--color-white);
+            padding: calc(1 * var(--spacing--base));
+            display: flex;
+            flex-direction: column;
+            gap: calc(0.5 * var(--spacing--base));
+
+            &:not(:first-of-type) {
+              border-top: unset;
+            }
+          }
+
+          h3 {
+            color: var(--color--grey-dark);
+          }
+
+          dl {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: calc(0.5 * var(--spacing--base));
+            dt {
+              color: var(--color--grey-dark);
+            }
+            dd {
+              text-transform: uppercase;
+            }
+          }
+        }
       }
     }
   }

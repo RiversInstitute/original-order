@@ -10,7 +10,7 @@ export interface Work {
   notes: string | null;
   box_number: string | null;
   medium_description: string | null;
-  dimensions: {
+  dimensions?: {
     type: 'height' | 'width' | 'depth' | string; // allow other dimension types if possible
     value: string; // could be string or number depending on usage
   }[];

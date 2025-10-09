@@ -65,8 +65,8 @@ const mediums = await Client.request(
   <ul id="container">
     {
       shuffled.map((work) => (
-        <li>
-          <Work work={work} />
+        <li data-work-container>
+          <Work work={work} tags={{ taxonomies, series, mediums }} />
         </li>
       ))
     }

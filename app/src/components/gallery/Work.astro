@@ -1,7 +1,12 @@
 ---
 import { marked } from "marked";
 
-import { type Work } from "@/lib/types";
+import {
+  type Medium,
+  type Series,
+  type Taxonomy,
+  type Work,
+} from "@/lib/types";
 import DirectusImage from "@/components/ui/DirectusImage.astro";
 import UpperRight from "@/components/ui/icons/UpperRight.astro";
 import MissingAsset from "../ui/MissingAsset.astro";
@@ -9,39 +14,86 @@ import Markdown from "../ui/Markdown.astro";
 
 interface Props {
   work: Work;
+  tags: {
+    taxonomies: Partial<Taxonomy>[];
+    series: Partial<Series>[];
+    mediums: Partial<Medium>[];
+  };
 }
 
-const { work } = Astro.props;
-console.log(work);
-const taxonomyClasses = work.taxonomy
-  ?.map((t) =>
-    typeof t === "number"
-      ? `${t}`
-      : typeof t === "object" && t.taxonomy_id
-        ? `${t.taxonomy_id}`
-        : ``,
-  )
-  .join(",");
+type TagMap = {
+  taxonomy: { id: number; url: string; title: string }[];
+  series: { id: number; url: string; title: string }[];
+  medium: { id: number; url: string; title: string }[];
+};
 
-const seriesClasses = work.series
-  ?.map((s) =>
-    typeof s === "number"
-      ? `${s}`
-      : typeof s === "object" && s.series_id
-        ? `${s.series_id}`
-        : ``,
-  )
-  .join(",");
+const { work, tags } = Astro.props;
 
-const mediumClasses = work.medium_category
-  ?.map((m) =>
-    typeof m === "number"
-      ? `${m}`
-      : typeof m === "object" && m.medium_id
-        ? `${m.medium_id}`
-        : ``,
-  )
-  .join(",");
+const tagMap: TagMap = {
+  taxonomy: [],
+  series: [],
+  medium: [],
+};
+
+tagMap.taxonomy =
+  work.taxonomy?.reduce(
+    (arr, t) => {
+      if (typeof t === "object" && t.taxonomy_id) {
+        const match = tags.taxonomies.find((tax) => tax.id === t.taxonomy_id);
+        if (match && match.id && match.title) {
+          arr.push({
+            id: match.id,
+            url: `/taxonomy/${match.id}/`,
+            title: match.title,
+          });
+        }
+      }
+      return arr;
+    },
+    [] as TagMap["taxonomy"],
+  ) ?? [];
+
+tagMap.series =
+  work.series?.reduce(
+    (arr, t) => {
+      if (typeof t === "object" && t.series_id) {
+        const match = tags.series.find((ser) => ser.id === t.series_id);
+        if (match && match.id && match.title) {
+          arr.push({
+            id: match.id,
+            url: `/series/${match.id}/`,
+            title: match.title,
+          });
+        }
+      }
+      return arr;
+    },
+    [] as TagMap["series"],
+  ) ?? [];
+
+tagMap.medium =
+  work.medium_category?.reduce(
+    (arr, t) => {
+      if (typeof t === "object" && t.medium_id) {
+        const match = tags.mediums.find((med) => med.id === t.medium_id);
+        if (match && match.id && match.title) {
+          arr.push({
+            id: match.id,
+            url: `/medium/${match.id}/`,
+            title: match.title,
+          });
+        }
+      }
+      return arr;
+    },
+    [] as TagMap["medium"],
+  ) ?? [];
+
+const taxonomyClasses = tagMap.taxonomy.map((t) => t.id).join(",");
+
+const seriesClasses = tagMap.series.map((s) => s.id).join(",");
+
+const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
 
 let coreDims = [];
 coreDims.push(work.dimensions?.find((dim) => dim.type === "width")?.value);
@@ -119,12 +171,12 @@ const dimString =
         }
       </figure>
       <div class="details">
-        <div>
+        <div class="section">
           <h2 class="strong" set:html={marked.parseInline(work.title)} />
           <h3 class="strong">{work.year}</h3>
           {work.description ? <Markdown content={work.description} /> : null}
         </div>
-        <div>
+        <div class="section">
           <dl>
             <div>
               <dt>Dimensions</dt>
@@ -141,6 +193,20 @@ const dimString =
               <dd class="mono">{work.medium_description}</dd>
             </div>
           </dl>
+        </div>
+        <div>
+          <ul>
+            {
+              (["taxonomy", "series", "medium"] as (keyof TagMap)[]).map(
+                (key) =>
+                  tagMap[key].map((tag) => (
+                    <li class={`tag ${key} ${key}-${tag.id} mono`}>
+                      <a href={tag.url}>{tag.title}</a>
+                    </li>
+                  )),
+              )
+            }
+          </ul>
         </div>
       </div>
     </div>
@@ -208,6 +274,7 @@ const dimString =
         svg {
           width: calc(1 * var(--spacing--base));
           stroke: var(--color-white);
+          fill: var(--color-white);
         }
       }
       > div {
@@ -231,14 +298,18 @@ const dimString =
 
           > div {
             width: 100%;
-            border: 1px solid var(--color-white);
-            padding: calc(1 * var(--spacing--base));
             display: flex;
             flex-direction: column;
             gap: calc(0.5 * var(--spacing--base));
+            padding-block: calc(1 * var(--spacing--base));
 
-            &:not(:first-of-type) {
-              border-top: unset;
+            &.section {
+              border: 1px solid var(--color-white);
+              padding-inline: calc(1 * var(--spacing--base));
+
+              &:not(:first-of-type) {
+                border-top: unset;
+              }
             }
           }
 
@@ -255,6 +326,39 @@ const dimString =
             }
             dd {
               text-transform: uppercase;
+            }
+          }
+
+          ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: calc(0.5 * var(--spacing--base));
+            .tag {
+              color: var(--color-white);
+              fill: var(--color-white);
+
+              font-weight: bold;
+              text-transform: uppercase;
+
+              display: flex;
+              align-items: center;
+              gap: calc(0.25 * var(--spacing--base));
+
+              a,
+              button {
+                padding: calc(0.25 * var(--spacing--base));
+                background-color: var(--bg-color);
+              }
+
+              &.taxonomy {
+                --bg-color: var(--color-filter-taxonomy);
+              }
+              &.series {
+                --bg-color: var(--color-filter-series);
+              }
+              &.medium {
+                --bg-color: var(--color-filter-medium);
+              }
             }
           }
         }

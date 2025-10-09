@@ -29,6 +29,15 @@ window.history.pushState = new Proxy(window.history.pushState, {
   },
 });
 
+window.history.replaceState = new Proxy(window.history.replaceState, {
+  apply: (target, thisArg, argArray: [data: any, unused: string, url?: string | URL | null | undefined]) => {
+    // trigger here what you need
+    const res = target.apply(thisArg, argArray);
+    window.dispatchEvent(new Event('popstate'));
+    return res;
+  },
+});
+
 const updateParamsFromWork = (work: Element) => {
   const searchParams = new URLSearchParams(window.location.search);
   const taxonomies = work.getAttribute('data-taxonomies');
@@ -40,7 +49,7 @@ const updateParamsFromWork = (work: Element) => {
   if (series) searchParams.set('series', series);
   if (mediums) searchParams.set('mediums', mediums);
 
-  window.history.pushState(null, '', `?${searchParams.toString()}`);
+  window.history.replaceState(null, '', `?${searchParams.toString()}`);
 }
 
 works?.forEach(work => {
@@ -109,7 +118,7 @@ const renderTags = (q: QueryParams) => {
     values.forEach(({ id, url, title }) => {
       const tag = document.createElement('div');
       tag.className = `tag ${key} ${key}-${id} mono`;
-      tag.innerHTML = `<a href="${url}"><caption>${title}</caption></a>`;
+      tag.innerHTML = `<a href="${url}">${title}</a>`;
 
       const closeButton = document.createElement('button');
       closeButton.ariaLabel = `Remove filter ${title}`;

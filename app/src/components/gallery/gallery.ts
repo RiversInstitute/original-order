@@ -7,7 +7,7 @@ const parentContainer = container?.parentElement as HTMLElement | null;
 if (container) {
   const pky = pd as unknown as typeof Packery;
   const p = new pky(container, {
-    itemSelector: "li",
+    itemSelector: "li[data-work-container]",
     transitionDuration: 0,
   });
   (window as CustomWindow).pky = p;

@@ -67,6 +67,7 @@ export interface DirectusFileStub {
   id: string;
   width: number;
   height: number;
+  description: string | null;
 }
 
 export interface Schema {

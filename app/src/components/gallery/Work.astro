@@ -120,10 +120,7 @@ const dimString =
   data-mediums={mediumClasses?.length ? mediumClasses : undefined}
 >
   <button data-open aria-label={`View details for ${work.title}`} type="button">
-    <figure
-      data-preview-figure
-      style=`--width-scale: ${Math.random() * .5 + .75}`
-    >
+    <div data-preview-figure style=`--width-scale: ${Math.random() * .5 + .75}`>
       {
         work.primary_view ? (
           <DirectusImage asset={work.primary_view} alt={work.title} />
@@ -131,7 +128,7 @@ const dimString =
           <MissingAsset />
         )
       }
-    </figure>
+    </div>
     <div data-caption>
       <p class="mono strong" set:html={marked.parseInline(work.title)} />
       <div><UpperRight /></div>
@@ -161,15 +158,19 @@ const dimString =
       </svg></button
     >
     <div>
-      <figure>
+      <div class="asset">
         {
           work.primary_view ? (
-            <DirectusImage asset={work.primary_view} alt={work.title} />
+            <DirectusImage
+              asset={work.primary_view}
+              alt={work.title}
+              withDescription={true}
+            />
           ) : (
             <MissingAsset />
           )
         }
-      </figure>
+      </div>
       <div class="details">
         <div class="section">
           <h2 class="strong" set:html={marked.parseInline(work.title)} />
@@ -213,14 +214,16 @@ const dimString =
   </article>
 </div>
 
-<style>
+<style lang="scss">
+  @use "@/styles/mixins.scss";
+
   div[data-work] {
     padding: var(--spacing--base);
     width: min-content;
 
-    figure[data-preview-figure] {
+    div[data-preview-figure] {
       --baseline-width: calc(var(--spacing--base) * 20);
-      img {
+      :global(img) {
         max-inline-size: calc(var(--width-scale, 1) * var(--baseline-width));
         height: auto;
       }
@@ -238,7 +241,7 @@ const dimString =
 
     &.expanded {
       article {
-        display: flex;
+        display: block;
       }
     }
 
@@ -263,12 +266,13 @@ const dimString =
       inset: 0;
       background-color: #000000dd;
       z-index: 200;
+      overflow: scroll;
 
       justify-content: center;
       align-items: center;
 
       button {
-        position: absolute;
+        position: fixed;
         top: var(--spacing--base);
         right: var(--spacing--base);
         svg {
@@ -279,14 +283,18 @@ const dimString =
       }
       > div {
         max-width: 60rem;
-
         display: grid;
         gap: var(--spacing--base);
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: calc(2.5 * var(--spacing--base));
         align-items: start;
+        grid-template-columns: minmax(0, 1fr);
 
-        figure {
-          img {
+        @include mixins.desktop {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        :global(figure) {
+          :global(img) {
             width: 100%;
             height: auto;
           }

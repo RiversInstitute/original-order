@@ -7,24 +7,39 @@ import type { DirectusFileStub } from "@/lib/types";
 interface Props {
   asset: string | DirectusFileStub;
   alt?: string;
+  withDescription?: boolean;
 }
 
-const { asset, alt } = Astro.props;
+const { asset, alt, withDescription } = Astro.props;
 const file =
   typeof asset === "string"
     ? await Client.request(
         readFile(asset, {
-          fields: ["id", "width", "height"],
+          fields: ["id", "width", "height", "description"],
         }),
       )
     : asset;
 ---
 
-<img
-  loading="lazy"
-  src={`/assets/${file.id}?width=1800&height=1800&fit=inside`}
-  alt={alt}
-  width={file?.width}
-  draggable="false"
-  height={file?.height}
-/>
+<figure>
+  <img
+    loading="lazy"
+    src={`/assets/${file.id}?width=1800&height=1800&fit=inside`}
+    alt={alt}
+    width={file?.width}
+    draggable="false"
+    height={file?.height}
+  />
+  {
+    withDescription && file?.description && (
+      <figcaption class="mono caption">{file.description}</figcaption>
+    )
+  }
+</figure>
+
+<style>
+  figcaption {
+    margin-top: calc(0.5 * var(--spacing--base));
+    color: var(--color--grey-dark);
+  }
+</style>

@@ -16,13 +16,13 @@ const { works } = Astro.props;
     works.map((work) => (
       <li>
         <a href={`/order-original?id=${work.id}&expanded=true`}>
-          <figure>
+          <div class="asset">
             {work.primary_view ? (
               <DirectusImage asset={work.primary_view} alt={work.title} />
             ) : (
               <MissingAsset />
             )}
-          </figure>
+          </div>
           <p class="mono strong" set:html={marked.parseInline(work.title)} />
           <p class="mono">{work.inventory_id}</p>
         </a>
@@ -47,7 +47,7 @@ const { works } = Astro.props;
       display: flex;
       flex-direction: column;
 
-      figure {
+      :global(figure) {
         margin: 0;
         margin-bottom: calc(0.5 * var(--spacing--base));
 

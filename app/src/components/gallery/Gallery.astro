@@ -8,7 +8,7 @@ const allWorks = await Client.request(
     filter: { status: { _eq: "published" }, primary_view: { _nnull: true } },
     fields: [
       "*",
-      { primary_view: ["id", "width", "height"] },
+      { primary_view: ["id", "width", "height", "description"] },
       { taxonomy: ["taxonomy_id"] },
       { series: ["series_id"] },
       { medium_category: ["medium_id"] },

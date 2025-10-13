@@ -1,6 +1,6 @@
-- courtesy notes on images
-- video links for work
-- multiple views for sov
++ courtesy notes on images
++ video links for work
+- multiple views for sov + videos
 - link work to taxonomy
-- carousel?
-- leporello 
+- carousel in taxonomy
+- leporello links

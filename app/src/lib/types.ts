@@ -19,7 +19,7 @@ export interface Work {
   medium_category: number[] | Work_Medium[] | null;
   primary_view: string | DirectusFileStub;
   presentations: number[];
-  views: string[];
+  views: number[] | Work_File[] | null;
 };
 
 interface Work_Taxonomy {
@@ -39,6 +39,13 @@ interface Work_Medium {
   work_id: number | Work;
   medium_id: number | Medium;
 }
+
+interface Work_File {
+  id: number;
+  work_id: number | Work;
+  directus_files_id: string | DirectusFileStub;
+}
+
 
 export interface Taxonomy {
   id: number;
@@ -69,7 +76,6 @@ export interface DirectusFileStub {
   height: number;
   description: string | null;
 }
-
 export interface Schema {
   information: Information
   works: Work[]
@@ -80,5 +86,6 @@ export interface Schema {
   medium: Medium[]
   works_medium: Work_Medium[]
   works_primary_view: DirectusFileStub
-  // works_files: Work_File[]
+  works_views: DirectusFileStub[]
+  works_files: Work_File[]
 }

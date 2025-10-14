@@ -20,6 +20,10 @@ export interface Work {
   primary_view: string | DirectusFileStub;
   presentations: number[];
   views: number[] | Work_File[] | null;
+  videos?: {
+    title?: string;
+    vimeo_id: string;
+  }[]
 };
 
 interface Work_Taxonomy {

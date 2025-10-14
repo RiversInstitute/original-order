@@ -90,4 +90,9 @@
     padding-inline: calc(2 * var(--spacing--base));
     margin-inline: auto;
   }
+
+  iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
 }

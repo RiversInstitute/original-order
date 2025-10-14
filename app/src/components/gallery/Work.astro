@@ -211,6 +211,40 @@ const dimString =
         </div>
       </div>
     </div>
+    {
+      work.videos && work.videos.length > 0 && (
+        <div class="videos">
+          {work.videos.map((video) => (
+            <div class="video">
+              <iframe
+                src={`https://player.vimeo.com/video/${video.vimeo_id}?title=0&byline=0&portrait=0&badge=0&vimeo_logo=false`}
+                title={video.title}
+                frame-border="0"
+                allowfullscreen
+              />
+              {video.title && <h4>{video.title}</h4>}
+            </div>
+          ))}
+        </div>
+      )
+    }
+    {
+      work.views && work.views.length > 0 && (
+        <div class="gallery">
+          {work.views.map((view, idx) => {
+            if (typeof view === "object" && view.directus_files_id) {
+              return (
+                <DirectusImage
+                  asset={view.directus_files_id}
+                  alt={`${work.title} view ${idx + 1}`}
+                  withDescription={true}
+                />
+              );
+            }
+          })}
+        </div>
+      )
+    }
   </article>
 </div>
 
@@ -291,6 +325,14 @@ const dimString =
 
         @include mixins.desktop {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+
+          &.videos {
+            grid-template-columns: minmax(0, 1fr);
+          }
+
+          &:first-of-type {
+            padding-block-start: calc(12 * var(--spacing--base));
+          }
         }
 
         :global(figure) {
@@ -368,6 +410,15 @@ const dimString =
                 --bg-color: var(--color-filter-medium);
               }
             }
+          }
+        }
+
+        .video {
+          display: grid;
+          gap: calc(0.5 * var(--spacing--base));
+
+          h4 {
+            font-weight: bold;
           }
         }
       }

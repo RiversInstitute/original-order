@@ -8,6 +8,9 @@ import { readItem, readItems } from "@directus/sdk";
 import { Client } from "@/lib/directus";
 import Markdown from "@/components/ui/Markdown.astro";
 import WorkGrid from "@/components/ui/WorkGrid.astro";
+import DirectusImage from "@/components/ui/DirectusImage.astro";
+import MissingAsset from "@/components/ui/MissingAsset.astro";
+import { marked } from "marked";
 
 const { id } = Astro.params;
 
@@ -19,7 +22,23 @@ let taxonomy;
 let works;
 
 try {
-  taxonomy = await Client.request(readItem("taxonomy", parseInt(id), {}));
+  taxonomy = await Client.request(
+    readItem("taxonomy", parseInt(id), {
+      fields: [
+        "*",
+        {
+          definition_works: [
+            {
+              works_id: [
+                "*",
+                { primary_view: ["id", "width", "height", "description"] },
+              ],
+            },
+          ],
+        },
+      ],
+    }),
+  );
   works = await Client.request(
     readItems("works", {
       filter: {
@@ -47,6 +66,55 @@ try {
     <TagNav activeTag="taxonomy" />
     <h2 class="mono"><strong>{taxonomy.title}</strong></h2>
     {
+      taxonomy.definition_works && taxonomy.definition_works.length > 0 ? (
+        <div data-definition-works-list>
+          {taxonomy.definition_works.length > 1 && (
+            <>
+              <button data-scroll-left aria-label="Scroll left">
+                ‹
+              </button>
+              <button data-scroll-right aria-label="Scroll right">
+                ›
+              </button>
+            </>
+          )}
+          <ul>
+            {taxonomy.definition_works.map((work) => {
+              if (
+                typeof work === "object" &&
+                typeof work.works_id === "object"
+              ) {
+                return (
+                  <li>
+                    <a
+                      href={`/order-original?id=${work.works_id.id}&expanded=true`}
+                    >
+                      <div class="asset">
+                        {work.works_id.primary_view ? (
+                          <DirectusImage
+                            asset={work.works_id.primary_view}
+                            alt={work.works_id.title}
+                          />
+                        ) : (
+                          <MissingAsset />
+                        )}
+                      </div>
+                      <p
+                        class="mono strong"
+                        set:html={marked.parseInline(work.works_id.title)}
+                      />
+                      <p class="mono">{work.works_id.inventory_id}</p>
+                    </a>
+                  </li>
+                );
+              }
+              return null;
+            })}
+          </ul>
+        </div>
+      ) : null
+    }
+    {
       taxonomy.description ? (
         <div>
           <Markdown content={taxonomy.description} />
@@ -59,7 +127,7 @@ try {
   </ContentWrapper>
 </Layout>
 
-<style>
+<style lang="scss">
   h2 {
     padding: calc(0.5 * var(--spacing--base));
     align-self: start;
@@ -69,4 +137,74 @@ try {
   div {
     margin-top: calc(2 * var(--spacing--base));
   }
+
+  div[data-definition-works-list] {
+    position: relative;
+
+    button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: calc(4 * var(--spacing--base));
+      line-height: 1;
+      padding: calc(0.5 * var(--spacing--base));
+      cursor: pointer;
+      z-index: 1;
+
+      &[data-scroll-left] {
+        left: calc(-2 * var(--spacing--base));
+      }
+
+      &[data-scroll-right] {
+        right: calc(-2 * var(--spacing--base));
+      }
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      padding-bottom: calc(1 * var(--spacing--base));
+
+      li {
+        scroll-snap-align: start;
+        width: 100%;
+        flex-shrink: 0;
+
+        > a {
+          display: flex;
+          flex-direction: column;
+
+          div.asset {
+            margin-bottom: var(--spacing--base);
+            :global(figure) {
+              :global(img) {
+                width: 100%;
+                height: auto;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 </style>
+
+<script>
+  document
+    .querySelector("button[data-scroll-right]")
+    ?.addEventListener("click", () => {
+      const list = document.querySelector("div[data-definition-works-list] ul");
+      list?.scrollBy({ left: list?.clientWidth, behavior: "smooth" });
+    });
+
+  document
+    .querySelector("button[data-scroll-left]")
+    ?.addEventListener("click", () => {
+      const list = document.querySelector("div[data-definition-works-list] ul");
+      list?.scrollBy({ left: -list?.clientWidth, behavior: "smooth" });
+    });
+</script>

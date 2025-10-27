@@ -29,24 +29,30 @@ export interface Work {
 interface Work_Taxonomy {
   id: number;
   taxonomy_id: number | Taxonomy;
-  work_id: number | Work;
+  works_id: number | Work;
+}
+
+interface Taxonomy_Work {
+  id: number;
+  works_id: number | Work;
+  taxonomy_id: number | Taxonomy;
 }
 
 interface Work_Series {
   id: number;
-  work_id: number | Work;
+  works_id: number | Work;
   series_id: number | Series;
 }
 
 interface Work_Medium {
   id: number;
-  work_id: number | Work;
+  works_id: number | Work;
   medium_id: number | Medium;
 }
 
 interface Work_File {
   id: number;
-  work_id: number | Work;
+  works_id: number | Work;
   directus_files_id: string | DirectusFileStub;
 }
 
@@ -54,6 +60,7 @@ interface Work_File {
 export interface Taxonomy {
   id: number;
   title: string;
+  definition_works: number[] | Taxonomy_Work[] | null;
   description: string | null;
 }
 
@@ -85,6 +92,7 @@ export interface Schema {
   works: Work[]
   taxonomy: Taxonomy[]
   works_taxonomy: Work_Taxonomy[]
+  taxonomy_works: Taxonomy_Work[]
   series: Series[]
   works_series: Work_Series[]
   medium: Medium[]

@@ -22,7 +22,7 @@ export interface Work {
   views: number[] | Work_File[] | null;
   videos?: {
     title?: string;
-    vimeo_id: string;
+    youtube_id: string;
   }[]
 };
 

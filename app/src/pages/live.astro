@@ -1,0 +1,95 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+import UpperRight from "@/components/ui/icons/UpperRight.astro";
+
+import { marked } from "marked";
+import { readSingleton, readItems } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+import Markdown from "@/components/ui/Markdown.astro";
+import type { Live, Work } from "@/lib/types";
+
+let live: Live;
+let works: Work[] = [];
+try {
+  live = await Client.request(readSingleton("videos", {}));
+  if (live && live.videos.length > 0) {
+    const workIds = live.videos
+      .map((video) => video.work_id?.key)
+      .filter((id) => id !== undefined);
+
+    works = await Client.request(
+      readItems("works", {
+        filter: {
+          id: { _in: workIds },
+          status: { _eq: "published" },
+        },
+        fields: ["*"],
+        limit: -1,
+      }),
+    );
+  }
+} catch (e) {
+  return new Response(null, { status: 404 });
+}
+---
+
+<Layout pageTitle={"Live"}>
+  <Nav />
+  <ContentWrapper>
+    <ul>
+      {
+        live.videos.map((video) => {
+          const work = works.find((work) => work.id === video.work_id?.key);
+          return (
+            <li>
+              <iframe
+                src={`https://www.youtube.com/embed/${video.youtube_id}?rel=0&color=white`}
+                title={video.title}
+                frame-border="0"
+                allowfullscreen
+              />
+              {work && (
+                <a href={`/order-original/?id=${work.id}&expanded=true`}>
+                  <p
+                    class="mono strong"
+                    set:html={marked.parseInline(video.title ?? work.title)}
+                  />
+                  <UpperRight />
+                </a>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </ContentWrapper>
+</Layout>
+
+<style lang="scss">
+  ul {
+    margin-block-start: 25vh;
+    display: flex;
+    flex-direction: column;
+    gap: calc(8 * var(--spacing--base));
+
+    li {
+      width: 100%;
+
+      iframe {
+        aspect-ratio: 16 / 9;
+      }
+
+      a {
+        display: flex;
+        width: 100%;
+        gap: calc(0.5 * var(--spacing--base));
+        margin-block-start: calc(0.5 * var(--spacing--base));
+        :global(svg) {
+          fill: var(--color-white);
+        }
+      }
+    }
+  }
+</style>

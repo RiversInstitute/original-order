@@ -81,6 +81,14 @@ export interface Information {
   content: string;
 }
 
+export interface Live {
+  videos: {
+    title: string;
+    work_id?: { key: number, collection: string };
+    youtube_id: string;
+  }[]
+}
+
 export interface DirectusFileStub {
   id: string;
   width: number;
@@ -100,4 +108,5 @@ export interface Schema {
   works_primary_view: DirectusFileStub
   works_views: DirectusFileStub[]
   works_files: Work_File[]
+  videos: Live
 }

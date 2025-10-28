@@ -1,6 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Nav from "../components/Nav.astro";
+import { readSingleton } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+import Live from "../components/ui/Live.astro";
+
+let live;
+try {
+	live = await Client.request(readSingleton("videos", {}));
+} catch (e) {
+	console.error(e);
+}
+
+let showVideoSection = false;
+if (live && live.videos.length > 0) {
+	showVideoSection = true;
+}
 ---
 
 <Layout pageTitle="Original Order">
@@ -28,6 +43,13 @@ import Nav from "../components/Nav.astro";
 			alt="Bettina handwritten by the artist, flipped horizontally"
 		/>
 	</a>
+	{
+		showVideoSection && (
+			<a id="live" href="/live">
+				<Live />
+			</a>
+		)
+	}
 </Layout>
 
 <style>
@@ -58,7 +80,8 @@ import Nav from "../components/Nav.astro";
 	}
 
 	#bettina-top,
-	#bettina-bottom {
+	#bettina-bottom,
+	#live {
 		height: calc(2 * var(--spacing--base));
 		position: fixed;
 		right: var(--spacing--base);
@@ -71,5 +94,11 @@ import Nav from "../components/Nav.astro";
 	#bettina-bottom {
 		bottom: var(--spacing--base);
 		transform: scaleY(-1);
+	}
+
+	#live {
+		top: var(--spacing--base);
+		left: var(--spacing--base);
+		right: unset;
 	}
 </style>

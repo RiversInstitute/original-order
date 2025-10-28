@@ -3,5 +3,6 @@
 + multiple views for sov + videos
 + link work to taxonomy
 + carousel in taxonomy
-- leporello links
 - videos page
+- leporello links
+- move to do spaces cdn

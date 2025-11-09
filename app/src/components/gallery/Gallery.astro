@@ -64,10 +64,6 @@ const mediums = await Client.request(
     limit: -1,
   }),
 );
-
-console.log(
-  JSON.stringify(shuffled.find((work) => work.inventory_id === "BG0072SC")),
-);
 ---
 
 <main data-filters={JSON.stringify({ taxonomies, series, mediums })}>

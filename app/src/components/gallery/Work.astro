@@ -123,7 +123,11 @@ const dimString =
     <div data-preview-figure style=`--width-scale: ${Math.random() * .5 + .75}`>
       {
         work.primary_view ? (
-          <DirectusImage asset={work.primary_view} alt={work.title} />
+          <DirectusImage
+            asset={work.primary_view}
+            alt={work.title}
+            width={740}
+          />
         ) : (
           <MissingAsset />
         )
@@ -165,6 +169,8 @@ const dimString =
               asset={work.primary_view}
               alt={work.title}
               withDescription={true}
+              width={1200}
+              height={1200}
             />
           ) : (
             <MissingAsset />
@@ -238,6 +244,7 @@ const dimString =
                   asset={view.directus_files_id}
                   alt={`${work.title} view ${idx + 1}`}
                   withDescription={true}
+                  width={960}
                 />
               );
             }

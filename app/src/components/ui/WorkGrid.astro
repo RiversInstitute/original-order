@@ -18,7 +18,11 @@ const { works } = Astro.props;
         <a href={`/order-original?id=${work.id}&expanded=true`}>
           <div class="asset">
             {work.primary_view ? (
-              <DirectusImage asset={work.primary_view} alt={work.title} />
+              <DirectusImage
+                asset={work.primary_view}
+                alt={work.title}
+                width={600}
+              />
             ) : (
               <MissingAsset />
             )}

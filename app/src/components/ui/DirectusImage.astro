@@ -8,9 +8,11 @@ interface Props {
   asset: string | DirectusFileStub;
   alt?: string;
   withDescription?: boolean;
+  width?: number;
+  height?: number;
 }
 
-const { asset, alt, withDescription } = Astro.props;
+const { asset, alt, withDescription, width, height } = Astro.props;
 const file =
   typeof asset === "string"
     ? await Client.request(
@@ -19,12 +21,19 @@ const file =
         }),
       )
     : asset;
+
+let derivedWidth = width;
+let derivedHeight = height;
+if (!width && !height) {
+  derivedWidth = 1800;
+  derivedHeight = 1800;
+}
 ---
 
 <figure>
   <img
     loading="lazy"
-    src={`/assets/${file.id}?width=1800&height=1800&fit=inside`}
+    src={`/assets/${file.id}?${derivedWidth ? `&width=${derivedWidth}` : ""}${derivedHeight ? `&height=${derivedHeight}` : ""}&fit=inside`}
     alt={alt}
     width={file?.width}
     draggable="false"

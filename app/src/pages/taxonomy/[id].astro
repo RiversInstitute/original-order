@@ -11,6 +11,7 @@ import WorkGrid from "@/components/ui/WorkGrid.astro";
 import DirectusImage from "@/components/ui/DirectusImage.astro";
 import MissingAsset from "@/components/ui/MissingAsset.astro";
 import { marked } from "marked";
+import Chevron from "@/components/ui/icons/Chevron.astro";
 
 const { id } = Astro.params;
 
@@ -71,10 +72,10 @@ try {
           {taxonomy.definition_works.length > 1 && (
             <>
               <button data-scroll-left aria-label="Scroll left">
-                ‹
+                <Chevron />
               </button>
               <button data-scroll-right aria-label="Scroll right">
-                ›
+                <Chevron />
               </button>
             </>
           )}
@@ -154,10 +155,19 @@ try {
 
       &[data-scroll-left] {
         left: calc(-2 * var(--spacing--base));
+
+        :global(svg) {
+          transform: rotate(180deg);
+        }
       }
 
       &[data-scroll-right] {
         right: calc(-2 * var(--spacing--base));
+      }
+
+      :global(svg) {
+        width: var(--spacing--base);
+        fill: var(--color-text);
       }
     }
 

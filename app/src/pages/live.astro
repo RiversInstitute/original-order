@@ -9,6 +9,7 @@ import { readSingleton, readItems } from "@directus/sdk";
 import { Client } from "@/lib/directus";
 import Markdown from "@/components/ui/Markdown.astro";
 import type { Live, Work } from "@/lib/types";
+import LiveC from "@/components/ui/Live.astro";
 
 let live: Live;
 let works: Work[] = [];
@@ -38,6 +39,7 @@ try {
 <Layout pageTitle={"Live"}>
   <Nav />
   <ContentWrapper>
+    <div data-live><LiveC /></div>
     <ul>
       {
         live.videos.map((video) => {
@@ -68,14 +70,20 @@ try {
 </Layout>
 
 <style lang="scss">
+  div[data-live] {
+    height: 50dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   ul {
-    margin-block-start: 25vh;
     display: flex;
     flex-direction: column;
-    gap: calc(8 * var(--spacing--base));
 
     li {
       width: 100%;
+      height: 90dvh;
 
       iframe {
         aspect-ratio: 16 / 9;

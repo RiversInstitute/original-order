@@ -15,21 +15,23 @@ let live: Live;
 let works: Work[] = [];
 try {
   live = await Client.request(readSingleton("videos", {}));
-  if (live && live.videos.length > 0) {
+  if (live && live.videos && live.videos.length > 0) {
     const workIds = live.videos
       .map((video) => video.work_id?.key)
       .filter((id) => id !== undefined);
 
-    works = await Client.request(
-      readItems("works", {
-        filter: {
-          id: { _in: workIds },
-          status: { _eq: "published" },
-        },
-        fields: ["*"],
-        limit: -1,
-      }),
-    );
+    if (workIds.length > 0) {
+      works = await Client.request(
+        readItems("works", {
+          filter: {
+            id: { _in: workIds },
+            status: { _eq: "published" },
+          },
+          fields: ["*"],
+          limit: -1,
+        }),
+      );
+    }
   }
 } catch (e) {
   return new Response(null, { status: 404 });
@@ -42,7 +44,7 @@ try {
     <div data-live><LiveC /></div>
     <ul>
       {
-        live.videos.map((video) => {
+        live.videos?.map((video) => {
           const work = works.find((work) => work.id === video.work_id?.key);
           return (
             <li>
@@ -66,6 +68,7 @@ try {
         })
       }
     </ul>
+    {!live.videos && <div class="strong">No current live videos</div>}
   </ContentWrapper>
 </Layout>
 

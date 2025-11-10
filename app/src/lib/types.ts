@@ -82,7 +82,7 @@ export interface Information {
 }
 
 export interface Live {
-  videos: {
+  videos?: {
     title: string;
     work_id?: { key: number, collection: string };
     youtube_id: string;

@@ -6,3 +6,5 @@
 + move to do spaces cdn
 + videos page
 - leporello links
+- shrink image for taxonomy xerox
+- light box

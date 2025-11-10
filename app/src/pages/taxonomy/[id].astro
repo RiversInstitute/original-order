@@ -130,6 +130,8 @@ try {
 </Layout>
 
 <style lang="scss">
+  @use "@/styles/mixins.scss";
+
   h2 {
     padding: calc(0.5 * var(--spacing--base));
     align-self: start;
@@ -143,15 +145,25 @@ try {
   div[data-definition-works-list] {
     position: relative;
 
+    @include mixins.desktop {
+      width: 50%;
+      margin-inline: auto;
+    }
+
+    div {
+      margin-top: unset;
+    }
+
     button {
       position: absolute;
-      top: 50%;
+      top: 45%;
       transform: translateY(-50%);
       font-size: calc(4 * var(--spacing--base));
       line-height: 1;
       padding: calc(0.5 * var(--spacing--base));
       cursor: pointer;
       z-index: 1;
+      display: flex;
 
       &[data-scroll-left] {
         left: calc(-2 * var(--spacing--base));

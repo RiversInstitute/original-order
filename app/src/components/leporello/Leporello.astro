@@ -20,7 +20,9 @@ try {
             href={
               block.url
                 ? block.url
-                : `/order-original/?id=${block.work?.key}&expanded=true`
+                : block.work
+                  ? `/order-original/?id=${block.work?.key}&expanded=true`
+                  : "#"
             }
           />
           {block.description && (

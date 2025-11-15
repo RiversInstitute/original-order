@@ -57,7 +57,10 @@ blocks.forEach((block) => {
     element: block.id,
     clickHandler: function (e) {
       // @ts-ignore
-      location.href = e.originalTarget.href;
+      if (e.quick) {
+        // @ts-ignore
+        location.href = e.originalTarget.href;
+      }
     },
   });
 })

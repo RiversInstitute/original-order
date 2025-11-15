@@ -1,4 +1,11 @@
+import type { LeporelloBlock } from "@/lib/types";
 import OpenSeadragon from "openseadragon";
+
+const WIDTH_PX = 161688;
+const HEIGHT_PX = 3900;
+
+const blocks: LeporelloBlock[] = JSON.parse((document.querySelector('.container') as HTMLElement)?.dataset.blocks ?? "[]");
+
 let viewer = OpenSeadragon({
   id: "leporello-viewer",
   zoomInButton: "zoom-in",
@@ -6,16 +13,13 @@ let viewer = OpenSeadragon({
   showHomeControl: false,
   showFullPageControl: false,
   tileSources: "/assets/leporello.dzi",
-  overlays: [
-    {
-      id: "example-overlay",
-      x: 0.0001,
-      y: 0.0001,
-      width: 0.0187,
-      height: 0.0137,
-      className: "overlay",
-    },
-  ],
+  overlays: blocks.map((block) => ({
+    ...block,
+    x: block.x / Math.max(WIDTH_PX, HEIGHT_PX),
+    y: block.y / Math.max(WIDTH_PX, HEIGHT_PX),
+    width: block.width / Math.max(WIDTH_PX, HEIGHT_PX),
+    height: block.height / Math.max(WIDTH_PX, HEIGHT_PX),
+  })),
   blendTime: 0.15,
   immediateRender: true,
   defaultZoomLevel: 20,
@@ -48,13 +52,15 @@ viewer.addHandler("open", function () {
   viewer.viewport.zoomTo(20);
 });
 
-new OpenSeadragon.MouseTracker({
-  element: "example-overlay",
-  clickHandler: function (e) {
-    // @ts-ignore
-    location.href = e.originalTarget.href;
-  },
-});
+blocks.forEach((block) => {
+  new OpenSeadragon.MouseTracker({
+    element: block.id,
+    clickHandler: function (e) {
+      // @ts-ignore
+      location.href = e.originalTarget.href;
+    },
+  });
+})
 
 viewer.addHandler("zoom", function ({ zoom }) {
   if (zoom > 21) {

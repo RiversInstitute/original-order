@@ -1,9 +1,36 @@
-<div class="container">
+---
+import { readSingleton } from "@directus/sdk";
+import { Client } from "@/lib/directus";
+import Markdown from "@/components/ui/Markdown.astro";
+
+let leporello;
+try {
+  leporello = await Client.request(readSingleton("leporello"));
+} catch (e) {
+  return new Response(null, { status: 404 });
+}
+---
+
+<div class="container" data-blocks={JSON.stringify(leporello.blocks)}>
   <div id="leporello-viewer">
-    <div id="example-overlay" class="overlay">
-      <a href="/"></a>
-      <div class="detail"><p>Example title</p></div>
-    </div>
+    {
+      leporello.blocks.map((block) => (
+        <div id={block.id} class="overlay">
+          <a
+            href={
+              block.url
+                ? block.url
+                : `/order-original/?id=${block.work?.key}&expanded=true`
+            }
+          />
+          {block.description && (
+            <div class="detail mono">
+              <Markdown content={block.description} />
+            </div>
+          )}
+        </div>
+      ))
+    }
   </div>
   <div id="controls">
     <button id="zoom-in"><div><strong>+</strong></div></button>
@@ -78,6 +105,8 @@
     }
 
     .detail {
+      --font-size--base: calc(0.75 * var(--font-size--base));
+
       position: absolute;
       display: none;
       padding-top: calc(0.5 * var(--spacing--base));

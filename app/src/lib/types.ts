@@ -89,6 +89,21 @@ export interface Live {
   }[]
 }
 
+export interface Leporello {
+  blocks: LeporelloBlock[]
+}
+
+export interface LeporelloBlock {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  description?: string;
+  url?: string;
+  work?: { key: number, collection: string };
+}
+
 export interface DirectusFileStub {
   id: string;
   width: number;
@@ -109,4 +124,5 @@ export interface Schema {
   works_views: DirectusFileStub[]
   works_files: Work_File[]
   videos: Live
+  leporello: Leporello
 }

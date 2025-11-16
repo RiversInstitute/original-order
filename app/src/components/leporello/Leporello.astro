@@ -2,6 +2,8 @@
 import { readSingleton } from "@directus/sdk";
 import { Client } from "@/lib/directus";
 import Markdown from "@/components/ui/Markdown.astro";
+import Plus from "@/components/ui/icons/Plus.astro";
+import Minus from "@/components/ui/icons/Minus.astro";
 
 let leporello;
 try {
@@ -35,8 +37,8 @@ try {
     }
   </div>
   <div id="controls">
-    <button id="zoom-in"><div><strong>+</strong></div></button>
-    <button id="zoom-out"><div><strong>–</strong></div></button>
+    <button id="zoom-in"><Plus /> </button>
+    <button id="zoom-out"><Minus /></button>
   </div>
   <div id="leporello-navigator-container">
     <div id="leporello-navigator"></div>
@@ -59,13 +61,14 @@ try {
 
     button {
       border: 1px solid var(--color-white);
-      div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: calc(2 * var(--spacing--base));
-        aspect-ratio: 1 / 1;
-      }
+      width: calc(2 * var(--spacing--base));
+      height: calc(2 * var(--spacing--base));
+      padding: calc(0.25 * var(--spacing--base));
+
+      fill: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         background-color: rgba(127, 127, 127, 0.25);

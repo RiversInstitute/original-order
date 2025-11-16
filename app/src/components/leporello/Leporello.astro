@@ -78,8 +78,8 @@ try {
 
   #leporello-navigator-container {
     position: absolute;
-    width: calc(100vw - 2 * var(--spacing--base));
-    left: var(--spacing--base);
+    width: calc(100vw - 9 * var(--spacing--base));
+    left: calc(7 * var(--spacing--base));
     bottom: var(--spacing--base);
     right: var(--spacing--base);
     aspect-ratio: 161688 / 3900;
@@ -91,12 +91,13 @@ try {
     height: 100%;
   }
 
-  :global(.overlay) {
-    border: 1px solid white;
-    transition: background-color 0.3s ease;
+  .overlay {
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
     position: relative;
 
     &:hover {
+      border: 1px solid white;
       background-color: rgba(127, 127, 127, 0.25);
       .detail {
         display: block;

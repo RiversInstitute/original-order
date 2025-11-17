@@ -3,6 +3,7 @@ import OpenSeadragon from "openseadragon";
 
 const WIDTH_PX = 161688;
 const HEIGHT_PX = 3900;
+const MIN_ZOOM = 20;
 
 const blocks: LeporelloBlock[] = JSON.parse((document.querySelector('.container') as HTMLElement)?.dataset.blocks ?? "[]");
 
@@ -22,9 +23,9 @@ let viewer = OpenSeadragon({
   })),
   blendTime: 0.15,
   immediateRender: true,
-  defaultZoomLevel: 20,
+  defaultZoomLevel: MIN_ZOOM,
   // maxZoomLevel: 20,
-  minZoomLevel: 20,
+  minZoomLevel: MIN_ZOOM,
   panVertical: false,
   showNavigator: true,
   navigatorId: "leporello-navigator",
@@ -49,7 +50,7 @@ viewer.addHandler("open", function () {
 
   const viewportRect = tiledImage.imageToViewportRectangle(imageRect);
   viewer.viewport.fitBounds(viewportRect, true);
-  viewer.viewport.zoomTo(20);
+  viewer.viewport.zoomTo(MIN_ZOOM);
 
   document.querySelectorAll('.overlay').forEach((el) => {
     el.classList.add('loaded');
@@ -85,7 +86,11 @@ viewer.addHandler("canvas-scroll", (e) => {
 
   // Wheel delta (pixels). Works for mouse wheel and most trackpads.
   const dx = (e.originalEvent as WheelEvent).deltaX || 0;
-  const dy = (e.originalEvent as WheelEvent).deltaY || 0;
+  let dy = (e.originalEvent as WheelEvent).deltaY || 0;
+
+  if (viewer.viewport.getZoom() <= MIN_ZOOM) {
+    dy = 0;
+  }
 
   // Tune this factor for your device feel
   const SPEED = 4;

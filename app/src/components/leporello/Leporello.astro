@@ -92,9 +92,14 @@ try {
   }
 
   .overlay {
+    visibility: hidden;
     border: 1px dashed rgba(255, 255, 255, 0.5);
     transition: all 0.3s ease;
     position: relative;
+
+    &.loaded {
+      visibility: visible;
+    }
 
     &:hover {
       border: 1px solid white;

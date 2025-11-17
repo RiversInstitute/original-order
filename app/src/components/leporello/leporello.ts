@@ -50,6 +50,10 @@ viewer.addHandler("open", function () {
   const viewportRect = tiledImage.imageToViewportRectangle(imageRect);
   viewer.viewport.fitBounds(viewportRect, true);
   viewer.viewport.zoomTo(20);
+
+  document.querySelectorAll('.overlay').forEach((el) => {
+    el.classList.add('loaded');
+  });
 });
 
 blocks.forEach((block) => {

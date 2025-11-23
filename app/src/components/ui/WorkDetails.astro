@@ -3,13 +3,15 @@ import Markdown from "@/components/ui/Markdown.astro";
 import { marked } from "marked";
 import type { Work as WorkType } from "@/lib/types";
 import type { TagMap } from "../gallery/Work.astro";
+import { LEPORELLO_BG } from "@/lib/consts";
 
 export interface Props {
   work: WorkType;
   tagMap: TagMap;
+  context?: "gallery" | "leporello" | "other";
 }
 
-const { work, tagMap } = Astro.props;
+const { work, tagMap, context = "gallery" } = Astro.props;
 
 let coreDims = [];
 coreDims.push(work.dimensions?.find((dim) => dim.type === "width")?.value);
@@ -33,6 +35,14 @@ const dimString =
     <h2 class="strong" set:html={marked.parseInline(work.title)} />
     <h3 class="strong">{work.year}</h3>
     {work.description ? <Markdown content={work.description} /> : null}
+    {
+      work.inventory_id === LEPORELLO_BG && context === "gallery" && (
+        <strong>
+          <br />
+          <a href="/original-order">View ORIGINAL ORDER</a>
+        </strong>
+      )
+    }
   </div>
   <div class="section">
     <dl>

@@ -8,9 +8,9 @@ const MIN_ZOOM = 20;
 const blocks: LeporelloBlock[] = JSON.parse((document.querySelector('.container') as HTMLElement)?.dataset.blocks ?? "[]");
 blocks.push({
   id: "leporello-work",
-  x: -2000,
+  x: -2500,
   y: 0,
-  width: 1500,
+  width: 2000,
   height: HEIGHT_PX / 2,
 })
 
@@ -59,7 +59,7 @@ viewer.addHandler("open", function () {
   viewer.viewport.fitBounds(viewportRect, true);
   viewer.viewport.zoomTo(MIN_ZOOM);
 
-  document.querySelectorAll('.overlay').forEach((el) => {
+  document.querySelectorAll('.overlay, #leporello-work').forEach((el) => {
     el.classList.add('loaded');
   });
 });

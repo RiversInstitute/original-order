@@ -34,10 +34,13 @@ try {
           <WorkDetails
             work={lepWork}
             tagMap={{ taxonomy: [], series: [], medium: [] }}
+            context="leporello"
           />
-          <a href={`/order-original/?id=${lepWork.id}&expanded=true`}>
-            Learn more
-          </a>
+          <strong>
+            <a href={`/order-original?id=${lepWork.id}&expanded=true`}>
+              Learn more
+            </a>
+          </strong>
         </div>
       )
     }
@@ -71,11 +74,23 @@ try {
   </div>
 </div>
 
-<style>
+<style lang="scss">
+  @use "@/styles/mixins.scss";
+
   #leporello-viewer,
   .container {
     width: 100vw;
     height: 100dvh;
+  }
+
+  #leporello-work {
+    display: none !important;
+
+    @include mixins.desktop {
+      &.loaded {
+        display: block !important;
+      }
+    }
   }
 
   #controls {

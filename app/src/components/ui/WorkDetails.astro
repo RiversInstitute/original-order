@@ -1,0 +1,145 @@
+---
+import Markdown from "@/components/ui/Markdown.astro";
+import { marked } from "marked";
+import type { Work as WorkType } from "@/lib/types";
+import type { TagMap } from "../gallery/Work.astro";
+
+export interface Props {
+  work: WorkType;
+  tagMap: TagMap;
+}
+
+const { work, tagMap } = Astro.props;
+
+let coreDims = [];
+coreDims.push(work.dimensions?.find((dim) => dim.type === "width")?.value);
+coreDims.push(work.dimensions?.find((dim) => dim.type === "height")?.value);
+coreDims.push(work.dimensions?.find((dim) => dim.type === "depth")?.value);
+coreDims = coreDims.filter((dim) => dim && dim.length > 0);
+
+const rest = work.dimensions
+  ?.filter((dim) => !["width", "height", "depth"].includes(dim.type ?? ""))
+  .map((dim) => dim.value?.trim())
+  .filter((dim) => dim && dim.length > 0);
+
+const dimString =
+  coreDims.join(" × ") +
+  (coreDims.length > 0 ? '"' : "") +
+  (rest && rest.length ? ` ${rest.join(" ")}` : "");
+---
+
+<div class="details">
+  <div class="section">
+    <h2 class="strong" set:html={marked.parseInline(work.title)} />
+    <h3 class="strong">{work.year}</h3>
+    {work.description ? <Markdown content={work.description} /> : null}
+  </div>
+  <div class="section">
+    <dl>
+      <div>
+        <dt>Dimensions</dt>
+        <dd class="mono">
+          {dimString.length ? dimString : "N/A"}
+        </dd>
+      </div>
+      <div>
+        <dt>Inventory Number</dt>
+        <dd class="mono">{work.inventory_id}</dd>
+      </div>
+      {
+        work.medium_description && (
+          <div>
+            <dt>Medium</dt>
+            <dd class="mono">{work.medium_description}</dd>
+          </div>
+        )
+      }
+    </dl>
+  </div>
+  <div>
+    <ul>
+      {
+        (["taxonomy", "series", "medium"] as (keyof TagMap)[]).map((key) =>
+          tagMap[key].map((tag) => (
+            <li class={`tag ${key} ${key}-${tag.id} mono`}>
+              <a href={tag.url}>{tag.title}</a>
+            </li>
+          )),
+        )
+      }
+    </ul>
+  </div>
+</div>
+
+<style lang="scss">
+  .details {
+    display: flex;
+    flex-direction: column;
+
+    > div {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: calc(0.5 * var(--spacing--base));
+      padding-block: calc(1 * var(--spacing--base));
+
+      &.section {
+        border: 1px solid var(--color-white);
+        padding-inline: calc(1 * var(--spacing--base));
+
+        &:not(:first-of-type) {
+          border-top: unset;
+        }
+      }
+    }
+
+    h3 {
+      color: var(--color--grey-dark);
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: calc(0.5 * var(--spacing--base));
+      dt {
+        color: var(--color--grey-dark);
+      }
+      dd {
+        text-transform: uppercase;
+      }
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(0.5 * var(--spacing--base));
+      .tag {
+        color: var(--color-white);
+        fill: var(--color-white);
+
+        font-weight: bold;
+        text-transform: uppercase;
+
+        display: flex;
+        align-items: center;
+        gap: calc(0.25 * var(--spacing--base));
+
+        a,
+        button {
+          padding: calc(0.25 * var(--spacing--base));
+          background-color: var(--bg-color);
+        }
+
+        &.taxonomy {
+          --bg-color: var(--color-filter-taxonomy);
+        }
+        &.series {
+          --bg-color: var(--color-filter-series);
+        }
+        &.medium {
+          --bg-color: var(--color-filter-medium);
+        }
+      }
+    }
+  }
+</style>

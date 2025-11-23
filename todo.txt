@@ -8,3 +8,5 @@
 + leporello links
 + shrink image for taxonomy xerox
 - light box
+- leporello entry
+- navigator

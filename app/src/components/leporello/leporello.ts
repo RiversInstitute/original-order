@@ -6,6 +6,13 @@ const HEIGHT_PX = 3900;
 const MIN_ZOOM = 20;
 
 const blocks: LeporelloBlock[] = JSON.parse((document.querySelector('.container') as HTMLElement)?.dataset.blocks ?? "[]");
+blocks.push({
+  id: "leporello-work",
+  x: -2000,
+  y: 0,
+  width: 1500,
+  height: HEIGHT_PX / 2,
+})
 
 let viewer = OpenSeadragon({
   id: "leporello-viewer",

@@ -1,0 +1,1 @@
+export const LEPORELLO_BG = 'BG0005LE';

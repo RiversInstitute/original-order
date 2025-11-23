@@ -29,16 +29,7 @@ window.history.pushState = new Proxy(window.history.pushState, {
   },
 });
 
-window.history.replaceState = new Proxy(window.history.replaceState, {
-  apply: (target, thisArg, argArray: [data: any, unused: string, url?: string | URL | null | undefined]) => {
-    // trigger here what you need
-    const res = target.apply(thisArg, argArray);
-    window.dispatchEvent(new Event('popstate'));
-    return res;
-  },
-});
-
-const updateParamsFromWork = (work: Element) => {
+const getParamsFromWork = (work: Element) => {
   const searchParams = new URLSearchParams(window.location.search);
   const taxonomies = work.getAttribute('data-taxonomies');
   const series = work.getAttribute('data-series');
@@ -49,7 +40,7 @@ const updateParamsFromWork = (work: Element) => {
   if (series) searchParams.set('series', series);
   if (mediums) searchParams.set('mediums', mediums);
 
-  window.history.replaceState(null, '', `?${searchParams.toString()}`);
+  return searchParams;
 }
 
 works?.forEach(work => {
@@ -69,7 +60,8 @@ works?.forEach(work => {
     } else {
       work.classList.add('selected');
       (window as CustomWindow).pky?.layout();
-      updateParamsFromWork(work);
+      const params = getParamsFromWork(work);
+      window.history.pushState(null, '', `?${params.toString()}`);
     }
   });
 });
@@ -157,10 +149,11 @@ const renderQueryParams = (q: QueryParams) => {
   const clearAll = emptyTags && !q.selectedId;
 
   if (q.selectedId && emptyTags) {
+
     const work = container?.querySelector(`[data-work][data-id="${q.selectedId}"]`)
     if (work) {
-      updateParamsFromWork(work);
-      return;
+      const params = getParamsFromWork(work);
+      window.history.replaceState(null, '', `?${params.toString()}`);
     }
   }
 
@@ -217,6 +210,15 @@ const getQueryParams = (): QueryParams => {
 window.addEventListener('popstate', (e) => {
   renderQueryParams(getQueryParams());
   renderTags(getQueryParams());
+});
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    container?.querySelector(`[data-work].expanded`)?.classList.remove('expanded');
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.delete('expanded');
+    window.history.pushState(null, '', `?${searchParams.toString()}`);
+  }
 });
 
 renderQueryParams(getQueryParams());

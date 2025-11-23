@@ -1,13 +1,26 @@
 ---
-import { readSingleton } from "@directus/sdk";
+import { readItems, readSingleton } from "@directus/sdk";
 import { Client } from "@/lib/directus";
 import Markdown from "@/components/ui/Markdown.astro";
 import Plus from "@/components/ui/icons/Plus.astro";
 import Minus from "@/components/ui/icons/Minus.astro";
+import { LEPORELLO_BG } from "@/lib/consts";
+import WorkDetails from "../ui/WorkDetails.astro";
 
 let leporello;
+let lepWork;
 try {
   leporello = await Client.request(readSingleton("leporello"));
+  const lepWorkRaw = await Client.request(
+    readItems("works", {
+      filter: {
+        inventory_id: { _eq: LEPORELLO_BG },
+        status: { _eq: "published" },
+      },
+      limit: 1,
+    }),
+  );
+  if (lepWorkRaw.length > 0) lepWork = lepWorkRaw[0];
 } catch (e) {
   return new Response(null, { status: 404 });
 }
@@ -15,6 +28,19 @@ try {
 
 <div class="container" data-blocks={JSON.stringify(leporello.blocks)}>
   <div id="leporello-viewer">
+    {
+      lepWork && (
+        <div id="leporello-work">
+          <WorkDetails
+            work={lepWork}
+            tagMap={{ taxonomy: [], series: [], medium: [] }}
+          />
+          <a href={`/order-original/?id=${lepWork.id}&expanded=true`}>
+            Learn more
+          </a>
+        </div>
+      )
+    }
     {
       leporello.blocks.map((block) => (
         <div id={block.id} class="overlay">
@@ -44,6 +70,7 @@ try {
     <div id="leporello-navigator"></div>
   </div>
 </div>
+
 <style>
   #leporello-viewer,
   .container {
@@ -118,8 +145,6 @@ try {
     }
 
     .detail {
-      --font-size--base: calc(0.75 * var(--font-size--base));
-
       position: absolute;
       display: none;
       padding-top: calc(0.5 * var(--spacing--base));

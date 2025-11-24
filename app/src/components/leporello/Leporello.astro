@@ -6,6 +6,7 @@ import Plus from "@/components/ui/icons/Plus.astro";
 import Minus from "@/components/ui/icons/Minus.astro";
 import { LEPORELLO_BG } from "@/lib/consts";
 import WorkDetails from "../ui/WorkDetails.astro";
+import Right from "../ui/icons/Right.astro";
 
 let leporello;
 let lepWork;
@@ -38,7 +39,7 @@ try {
           />
           <strong>
             <a href={`/order-original?id=${lepWork.id}&expanded=true`}>
-              Learn more
+              Learn more <Right />
             </a>
           </strong>
         </div>
@@ -90,6 +91,14 @@ try {
       &.loaded {
         display: block !important;
       }
+    }
+
+    :global(svg) {
+      margin-inline-start: calc(0.25 * var(--spacing--base));
+      display: inline-block;
+      fill: currentColor;
+      height: 0.75lh;
+      stroke: currentColor;
     }
   }
 

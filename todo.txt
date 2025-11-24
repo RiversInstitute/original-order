@@ -7,6 +7,6 @@
 + videos page
 + leporello links
 + shrink image for taxonomy xerox
-- light box
-- leporello entry
++ leporello entry
+- light box/carousel
 - navigator

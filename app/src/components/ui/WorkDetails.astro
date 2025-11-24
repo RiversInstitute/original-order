@@ -37,10 +37,11 @@ const dimString =
     {work.description ? <Markdown content={work.description} /> : null}
     {
       work.inventory_id === LEPORELLO_BG && context === "gallery" && (
-        <strong>
-          <br />
-          <a href="/original-order">View ORIGINAL ORDER</a>
-        </strong>
+        <div id="original-order-link">
+          <strong>
+            <a href="/original-order">ORIGINAL ORDER</a>
+          </strong>
+        </div>
       )
     }
   </div>
@@ -99,6 +100,15 @@ const dimString =
 
         &:not(:first-of-type) {
           border-top: unset;
+        }
+
+        #original-order-link {
+          margin-block: calc(1 * var(--spacing--base));
+          a {
+            padding: calc(0.5 * var(--spacing--base));
+            color: var(--color-black);
+            background-color: var(--color-white);
+          }
         }
       }
     }

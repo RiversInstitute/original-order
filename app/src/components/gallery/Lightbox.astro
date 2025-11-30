@@ -78,12 +78,18 @@ import Close from "@/components/ui/icons/Close.astro";
         img.src = e.detail.src;
         if (e.detail.caption.length > 0) {
           img.alt = e.detail.caption;
+        } else {
+          img.alt = "";
         }
       }
 
       const caption = lightbox.querySelector("p");
-      if (caption && e.detail.caption.length > 0) {
-        caption.textContent = e.detail.caption;
+      if (caption) {
+        if (e.detail.caption.length > 0) {
+          caption.textContent = e.detail.caption;
+        } else {
+          caption.textContent = "";
+        }
       }
       lightbox.classList.add("active");
     }

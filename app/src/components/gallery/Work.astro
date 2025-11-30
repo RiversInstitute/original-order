@@ -11,6 +11,7 @@ import DirectusImage from "@/components/ui/DirectusImage.astro";
 import UpperRight from "@/components/ui/icons/UpperRight.astro";
 import MissingAsset from "../ui/MissingAsset.astro";
 import WorkDetails from "../ui/WorkDetails.astro";
+import Chevron from "../ui/icons/Chevron.astro";
 
 interface Props {
   work: Work;
@@ -184,18 +185,57 @@ const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
     {
       work.views && work.views.length > 0 && (
         <div class="gallery">
-          {work.views.map((view, idx) => {
-            if (typeof view === "object" && view.directus_files_id) {
-              return (
-                <DirectusImage
-                  asset={view.directus_files_id}
-                  alt={`${work.title} view ${idx + 1}`}
-                  withDescription={true}
-                  width={960}
-                />
-              );
-            }
-          })}
+          <div class="viewer-container">
+            {work.views.length > 1 && (
+              <>
+                <button data-scroll data-scroll-left aria-label="Scroll left">
+                  <Chevron />
+                </button>
+                <button data-scroll data-scroll-right aria-label="Scroll right">
+                  <Chevron />
+                </button>
+              </>
+            )}
+            <ul class="viewer">
+              {work.views.map((view, idx) => {
+                if (typeof view === "object" && view.directus_files_id) {
+                  return (
+                    <li>
+                      <DirectusImage
+                        lightboxGallery="work-views"
+                        asset={view.directus_files_id}
+                        alt={`${work.title} view ${idx + 1}`}
+                        withDescription={true}
+                        width={960}
+                      />
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          </div>
+
+          <ul class="thumbnails">
+            {work.views.map((view, idx) => {
+              if (typeof view === "object" && view.directus_files_id) {
+                return (
+                  <li>
+                    <button
+                      type="button"
+                      aria-label={`View image ${idx + 1} in gallery`}
+                    >
+                      <DirectusImage
+                        asset={view.directus_files_id}
+                        alt={`${work.title} view ${idx + 1}`}
+                        withDescription={false}
+                        width={960}
+                      />
+                    </button>
+                  </li>
+                );
+              }
+            })}
+          </ul>
         </div>
       )
     }
@@ -259,7 +299,7 @@ const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
       justify-content: center;
       align-items: center;
 
-      button {
+      button[data-close] {
         position: fixed;
         top: var(--spacing--base);
         right: var(--spacing--base);
@@ -296,6 +336,82 @@ const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
           }
         }
 
+        &.gallery {
+          display: flex;
+          flex-direction: column;
+
+          .viewer-container {
+            position: relative;
+
+            ul.viewer {
+              display: flex;
+
+              align-items: center;
+              gap: calc(2 * var(--spacing--base));
+              background-color: var(--color-black);
+              outline: 0.5px solid rgba(255, 255, 255, 0.4);
+              padding: calc(1 * var(--spacing--base));
+
+              overflow-x: scroll;
+              overflow-y: hidden;
+              scroll-snap-type: x mandatory;
+
+              li {
+                scroll-snap-align: center;
+                width: 100%;
+                flex-shrink: 0;
+
+                :global(figure) {
+                  @include mixins.desktop {
+                    width: 50%;
+                    margin-inline: auto;
+                  }
+                }
+              }
+            }
+
+            button[data-scroll] {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              font-size: calc(4 * var(--spacing--base));
+              line-height: 1;
+              padding: calc(0.5 * var(--spacing--base));
+              cursor: pointer;
+              z-index: 1;
+              display: flex;
+
+              &[data-scroll-left] {
+                left: calc(-2 * var(--spacing--base));
+
+                :global(svg) {
+                  transform: rotate(180deg);
+                  fill: var(--color-white);
+                }
+              }
+
+              &[data-scroll-right] {
+                right: calc(-2 * var(--spacing--base));
+              }
+
+              :global(svg) {
+                width: var(--spacing--base);
+                fill: var(--color-text);
+              }
+            }
+          }
+
+          ul.thumbnails {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: calc(var(--spacing--base));
+
+            @include mixins.desktop {
+              grid-template-columns: repeat(6, minmax(0, 1fr));
+            }
+          }
+        }
+
         .video {
           display: grid;
           gap: calc(0.5 * var(--spacing--base));
@@ -308,3 +424,33 @@ const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll("article div.gallery").forEach((gallery) => {
+    const viewer = gallery.querySelector("ul.viewer");
+    const thumbnails = gallery.querySelectorAll("ul.thumbnails button");
+
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener("click", () => {
+        const targetSlide = viewer?.children[index];
+        if (targetSlide) {
+          targetSlide.scrollIntoView({ behavior: "smooth", inline: "center" });
+        }
+      });
+    });
+
+    gallery.querySelectorAll("button[data-scroll]").forEach((scrollButton) => {
+      scrollButton.addEventListener("click", () => {
+        const scrollAmount = viewer?.clientWidth;
+        if (scrollButton.hasAttribute("data-scroll-left")) {
+          viewer?.scrollBy({
+            left: -1 * (scrollAmount ?? 0),
+            behavior: "smooth",
+          });
+        } else {
+          viewer?.scrollBy({ left: scrollAmount ?? 0, behavior: "smooth" });
+        }
+      });
+    });
+  });
+</script>

@@ -9,5 +9,5 @@
 + shrink image for taxonomy xerox
 + leporello entry
 + light box
-- carousel
++ carousel
 - navigator

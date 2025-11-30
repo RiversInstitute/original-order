@@ -10,9 +10,11 @@ interface Props {
   withDescription?: boolean;
   width?: number;
   height?: number;
+  lightboxGallery?: string;
 }
 
-const { asset, alt, withDescription, width, height } = Astro.props;
+const { asset, alt, withDescription, width, height, lightboxGallery } =
+  Astro.props;
 const file =
   typeof asset === "string"
     ? await Client.request(
@@ -30,7 +32,15 @@ if (!width && !height) {
 }
 ---
 
-<figure>
+<figure
+  {...lightboxGallery
+    ? {
+        "data-lightbox-gallery": lightboxGallery,
+        "data-lightbox-src": `/assets/${file.id}?width=2000&height=2000&fit=inside`,
+        "data-lightbox-caption": file?.description ?? "",
+      }
+    : {}}
+>
   <img
     loading="lazy"
     src={`/assets/${file.id}?${derivedWidth ? `&width=${derivedWidth}` : ""}${derivedHeight ? `&height=${derivedHeight}` : ""}&fit=inside`}
@@ -51,4 +61,32 @@ if (!width && !height) {
     margin-top: calc(0.5 * var(--spacing--base));
     color: var(--color--grey-dark);
   }
+
+  [data-lightbox-gallery] {
+    cursor: pointer;
+  }
 </style>
+
+<script>
+  import type { OpenLightboxEvent } from "@/lib/consts";
+
+  document
+    .querySelectorAll("figure[data-lightbox-gallery]")
+    .forEach((figure) => {
+      figure.addEventListener("click", () => {
+        const src = figure.getAttribute("data-lightbox-src");
+        const gallery = figure.getAttribute("data-lightbox-gallery");
+        const caption = figure.getAttribute("data-lightbox-caption") || "";
+        if (src) {
+          const event = new CustomEvent<OpenLightboxEvent>("openLightbox", {
+            detail: {
+              src,
+              caption,
+              gallery,
+            },
+          });
+          document.dispatchEvent(event);
+        }
+      });
+    });
+</script>

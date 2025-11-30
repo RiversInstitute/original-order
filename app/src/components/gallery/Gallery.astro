@@ -2,6 +2,7 @@
 import { readItems } from "@directus/sdk";
 import { Client } from "@/lib/directus";
 import Work from "@/components/gallery/Work.astro";
+import Lightbox from "./Lightbox.astro";
 
 const allWorks = await Client.request(
   readItems("works", {
@@ -77,6 +78,7 @@ const mediums = await Client.request(
     }
   </ul>
   <div id="activeTags"></div>
+  <Lightbox />
 </main>
 
 <style>

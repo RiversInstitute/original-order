@@ -150,6 +150,7 @@ const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
         {
           work.primary_view ? (
             <DirectusImage
+              lightboxGallery="primary-asset"
               asset={work.primary_view}
               alt={work.title}
               withDescription={true}

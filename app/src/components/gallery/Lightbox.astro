@@ -1,0 +1,91 @@
+---
+import Close from "@/components/ui/icons/Close.astro";
+---
+
+<div data-lightbox>
+  <img src="" alt="Lightbox Image" />
+  <p></p>
+  <button data-close-lightbox aria-label="Close lightbox" type="button">
+    <Close />
+  </button>
+</div>
+
+<style lang="scss">
+  div {
+    inset: 0;
+    position: fixed;
+    background-color: var(--color-black);
+    z-index: 300;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-height: 100dvh;
+    padding: var(--spacing--base);
+    gap: calc(1 * var(--spacing--base));
+
+    &.active {
+      display: flex;
+    }
+
+    img {
+      max-height: calc(100dvh - 6 * var(--spacing--base));
+    }
+
+    button {
+      position: fixed;
+      top: var(--spacing--base);
+      right: var(--spacing--base);
+
+      :global(svg) {
+        width: calc(1 * var(--spacing--base));
+        height: calc(1 * var(--spacing--base));
+        fill: var(--color-white);
+        stroke: var(--color-white);
+      }
+    }
+  }
+</style>
+
+<script>
+  import type { OpenLightboxEvent } from "@/lib/consts";
+  const closeLightbox = () => {
+    const lightbox = document.querySelector("div[data-lightbox]");
+    if (lightbox && lightbox.classList.contains("active")) {
+      lightbox.classList.remove("active");
+      return true;
+    }
+    return false;
+  };
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && closeLightbox()) {
+      event.stopPropagation();
+    }
+  });
+
+  document
+    .querySelector("button[data-close-lightbox]")
+    ?.addEventListener("click", () => {
+      closeLightbox();
+    });
+  document.addEventListener("openLightbox", (event: Event) => {
+    const e = event as CustomEvent<OpenLightboxEvent>;
+    const lightbox = document.querySelector("div[data-lightbox]");
+    if (lightbox) {
+      const img = lightbox.querySelector("img");
+      if (img) {
+        img.src = e.detail.src;
+        if (e.detail.caption.length > 0) {
+          img.alt = e.detail.caption;
+        }
+      }
+
+      const caption = lightbox.querySelector("p");
+      if (caption && e.detail.caption.length > 0) {
+        caption.textContent = e.detail.caption;
+      }
+      lightbox.classList.add("active");
+    }
+  });
+</script>

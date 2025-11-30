@@ -66,6 +66,17 @@ try {
       ))
     }
   </div>
+  {
+    lepWork && (
+      <div id="leporello-work-mobile">
+        <strong>
+          <a href={`/order-original?id=${lepWork.id}&expanded=true`}>
+            {lepWork.inventory_id} <Right />
+          </a>
+        </strong>
+      </div>
+    )
+  }
   <div id="controls">
     <button id="zoom-in"><Plus /> </button>
     <button id="zoom-out"><Minus /></button>
@@ -124,6 +135,24 @@ try {
       &:hover {
         background-color: rgba(127, 127, 127, 0.25);
       }
+    }
+  }
+
+  #leporello-work-mobile {
+    position: absolute;
+    top: var(--spacing--base);
+    left: var(--spacing--base);
+
+    :global(svg) {
+      margin-inline-start: calc(0.25 * var(--spacing--base));
+      display: inline-block;
+      fill: currentColor;
+      height: 0.75lh;
+      stroke: currentColor;
+    }
+
+    @include mixins.desktop {
+      display: none;
     }
   }
 

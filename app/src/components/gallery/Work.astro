@@ -119,7 +119,11 @@ const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
       }
     </div>
     <div data-caption>
-      <p class="mono strong" set:html={marked.parseInline(work.title)} />
+      {
+        work.title && (
+          <p class="mono strong" set:html={marked.parseInline(work.title)} />
+        )
+      }
       <div><UpperRight /></div>
     </div>
   </button>
@@ -228,7 +232,7 @@ const mediumClasses = tagMap.medium.map((m) => m.id).join(",");
                         asset={view.directus_files_id}
                         alt={`${work.title} view ${idx + 1}`}
                         withDescription={false}
-                        width={960}
+                        width={300}
                       />
                     </button>
                   </li>

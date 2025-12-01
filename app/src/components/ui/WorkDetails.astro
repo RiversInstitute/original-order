@@ -32,7 +32,11 @@ const dimString =
 
 <div class="details">
   <div class="section">
-    <h2 class="strong" set:html={marked.parseInline(work.title)} />
+    {
+      work.title && (
+        <h2 class="strong" set:html={marked.parseInline(work.title)} />
+      )
+    }
     <h3 class="strong">{work.year}</h3>
     {work.description ? <Markdown content={work.description} /> : null}
     {

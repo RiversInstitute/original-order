@@ -10,4 +10,6 @@
 + leporello entry
 + light box
 + carousel
+- search
 - navigator
+- cdn

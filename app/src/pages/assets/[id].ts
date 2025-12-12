@@ -1,7 +1,5 @@
 import type { APIRoute } from "astro";
-import { readAssetRaw, type AssetsQuery } from "@directus/sdk";
-
-import { Client } from "@/lib/directus";
+import { type AssetsQuery } from "@directus/sdk";
 
 type ValidParam = 'width' | 'height' | 'quality' | 'fit';
 const validParams: ValidParam[] = ['width', 'height', 'quality', 'fit'];
@@ -31,8 +29,20 @@ export const GET: APIRoute = async ({ params, request }) => {
     }
   }
 
+  const queryString = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    queryString.append(key, String(value));
+  }
+
   try {
-    return new Response(await Client.request(readAssetRaw(id, query)));
+    const res = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/assets/${id}?${queryString.toString()}`)
+    if (!res.ok) {
+      throw new Error("Asset not found");
+    }
+    const arrayBuffer = await res.arrayBuffer();
+    return new Response(arrayBuffer, {
+      headers: res.headers,
+    });
   } catch {
     return new Response("Not Found", { status: 404 });
   }

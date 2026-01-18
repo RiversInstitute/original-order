@@ -6,3 +6,10 @@ export type OpenLightboxEvent = {
   src: string;
   caption: string;
 }
+
+export type AssetRequest = {
+  id: string;
+  width?: number;
+  height?: number;
+  fit?: 'cover' | 'contain' | 'inside' | 'outside';
+}

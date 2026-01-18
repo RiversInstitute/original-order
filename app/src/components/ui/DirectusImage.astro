@@ -3,6 +3,7 @@ import { readFile } from "@directus/sdk";
 
 import { Client } from "@/lib/directus";
 import type { DirectusFileStub } from "@/lib/types";
+import type { AssetRequest } from "@/lib/consts";
 
 interface Props {
   asset: string | DirectusFileStub;
@@ -30,20 +31,33 @@ if (!width && !height) {
   derivedWidth = 1800;
   derivedHeight = 1800;
 }
+
+const encodeRequest = (id: string, width?: number, height?: number) => {
+  const params: AssetRequest = {
+    id,
+    width,
+    height,
+    fit: "inside",
+  };
+  return btoa(JSON.stringify(params));
+};
+
+const assetUrl = `/assets/${encodeRequest(file.id, derivedWidth, derivedHeight)}`;
+const fullAssetUrl = `/assets/${encodeRequest(file.id, 2000, 2000)}`;
 ---
 
 <figure
   {...lightboxGallery
     ? {
         "data-lightbox-gallery": lightboxGallery,
-        "data-lightbox-src": `/assets/${file.id}?width=2000&height=2000&fit=inside`,
+        "data-lightbox-src": fullAssetUrl,
         "data-lightbox-caption": file?.description ?? "",
       }
     : {}}
 >
   <img
     loading="lazy"
-    src={`/assets/${file.id}?${derivedWidth ? `&width=${derivedWidth}` : ""}${derivedHeight ? `&height=${derivedHeight}` : ""}&fit=inside`}
+    src={assetUrl}
     alt={alt}
     width={file?.width}
     draggable="false"

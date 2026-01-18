@@ -10,6 +10,7 @@
 + leporello entry
 + light box
 + carousel
++ cdn
++ update rivers site to support linking to
 - search
 - navigator
-- cdn

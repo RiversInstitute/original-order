@@ -15,7 +15,13 @@ RUN pnpm run build
 FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
+
+# Add PM2 (runtime) for clustering
+RUN npm i -g pm2
+
 ENV HOST=0.0.0.0
 ENV PORT=4321
 EXPOSE 4321
-CMD ["node", "./dist/server/entry.mjs"]
+
+# Spawn workers (one per CPU core). Use a number instead of "max" if you prefer.
+CMD ["pm2-runtime", "./dist/server/entry.mjs", "--name", "astro", "--instances", "max", "--exec-mode", "cluster"]

@@ -11,15 +11,21 @@ export const GET: APIRoute = async ({ params, request }) => {
     return new Response("Not Found", { status: 404 });
   }
 
-  // decode
-  const decoded = atob(id);
-  const req = JSON.parse(decoded) as AssetRequest;
+  let assetId = id;
+  let query: AssetsQuery = {};
 
-  const query: AssetsQuery = {
-    width: req.width,
-    height: req.height,
-    fit: req.fit,
-  };
+  // decode b64 if it is validly encoded
+  try {
+    const decoded = atob(id);
+    const req = JSON.parse(decoded) as AssetRequest;
+
+    query = {
+      width: req.width,
+      height: req.height,
+      fit: req.fit,
+    };
+    assetId = req.id
+  } catch { }
 
   const queryString = new URLSearchParams();
   for (const [key, value] of Object.entries(query)) {
@@ -29,7 +35,7 @@ export const GET: APIRoute = async ({ params, request }) => {
   }
 
   try {
-    const res = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/assets/${req.id}?${queryString.toString()}`)
+    const res = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/assets/${assetId}?${queryString.toString()}`)
     if (!res.ok) {
       throw new Error("Asset not found");
     }
